@@ -4,8 +4,8 @@ This project aims to create a mobile application helps people to find and sugges
 ## Group Members' Name/ID
 Idil Bayar / 32267 \
 Taha Yuşa Bayraktar / \
-Furkan Çetin / \
-Berkan Çetin / \
+Furkan Çetin / 32384 \
+Berkan Çetin / 32055 \
 Semih Kas / \
 Alp Mert Ekşi / \
 
