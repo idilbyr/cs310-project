@@ -6,8 +6,8 @@ Idil Bayar / 32267 \
 Taha Yuşa Bayraktar / 32398\
 Furkan Çetin / 32384 \
 Berkan Çetin / 32055 \
-Semih Kas / \
-Alp Mert Ekşi / \
+Semih Kaş / 22575 \
+Alp Mert Ekşi / 32119 \
 
 ## The Problem
   main hard part is probsbly be the rating algorithm and how to get and classify the watches.
