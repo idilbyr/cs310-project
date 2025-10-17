@@ -31,7 +31,7 @@ The database will be generated and implemented by a famous database application,
 ## Responsibility of each Team Member
 - Project Coordinator: ___ is responsible from arranging the group meetings and ensuring the team achieve their goals within a stable steps. They must keep the team on schedule and keep the communication among both in group and between the TA and the group.
 - Documentation & Submission: İdil Bayar and ___ are responsible from all written materials relevant to the project. They must track the deadlines of each written file submission. Furthermore, they have the obligation to express their project's overall logic clearly within the determined boundaries of the course.
-- Testing & Quality Assurance: ___ and ___ are responsible from reviewing and testing FridgeNote app regularly. They  must evaluate the application run procedure and make sure that the code runs smoothly and as expected.
+- Testing & Quality Assurance: Furkan Çetin and ___ are responsible from reviewing and testing FridgeNote app regularly. They  must evaluate the application run procedure and make sure that the code runs smoothly and as expected.
 - Integration & Repository Lead: ____ is responsible from managing the Github repository. They must resolve the merge conflict and the merge request as soon as possible.
 ## Platform
 We are using Android Studio with the Flutter tool.
