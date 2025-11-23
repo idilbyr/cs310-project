@@ -2,81 +2,93 @@ import 'package:flutter/material.dart';
 import '../utils/constants.dart';
 
 class FridgeOverviewScreen extends StatelessWidget {
-  // Named Route
   static const String routeName = '/fridge_overview';
 
   const FridgeOverviewScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Dummy Categories
-    final List<Map<String, dynamic>> categories = [
-      {'name': 'Vegetables', 'icon': Icons.eco, 'color': Colors.green},
-      {'name': 'Dairy', 'icon': Icons.egg, 'color': Colors.yellow},
-      {'name': 'Meat', 'icon': Icons.kebab_dining, 'color': Colors.red},
-      {'name': 'Beverages', 'icon': Icons.local_drink, 'color': Colors.blue},
-      {'name': 'Snacks', 'icon': Icons.cookie, 'color': Colors.orange},
-      {'name': 'Others', 'icon': Icons.fastfood, 'color': Colors.grey},
-    ];
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Fridge Content'),
-        backgroundColor: AppColors.primaryColor,
+        title: const Text('FRIDGE_1', style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.black),
+        actions: [
+          IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+          IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
+        ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.only(bottom: 10.0),
-              child: Text('Categories', style: AppTextStyles.headerStyle),
+            // Kategoriler Listesi (Wireframe'deki gibi renkli)
+            Expanded(
+              child: ListView(
+                children: [
+                  _buildCategoryCard('VEGETABLES', Icons.eco, const Color(0xFFFFE082)), // Sarı
+                  _buildCategoryCard('MEATS', Icons.kebab_dining, const Color(0xFFFFCDD2)), // Pembe/Kırmızı
+                  _buildCategoryCard('FISH', Icons.set_meal, const Color(0xFF90CAF9)), // Mavi
+                  _buildCategoryCard('FRUIT', Icons.apple, const Color(0xFFFFCC80)), // Turuncu
+                  _buildCategoryCard('DAIRY', Icons.egg, const Color(0xFFFFF59D)), // Açık Sarı
+                ],
+              ),
             ),
             
-            // REQUIREMENT: Responsiveness & Grid Layout
-            Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, // 2 columns
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  childAspectRatio: 1.2,
-                ),
-                itemCount: categories.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                    child: InkWell(
-                      onTap: () {
-                        // Navigate to Category Detail (Screen 7 - Future work)
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Opened ${categories[index]['name']}')),
-                        );
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            categories[index]['icon'],
-                            size: 50,
-                            color: categories[index]['color'],
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            categories[index]['name'],
-                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
+            // Alt Butonlar (Shopping List & Add Item)
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  // Navigate to Shopping List (Screen 9 - Future)
                 },
+                icon: const Icon(Icons.shopping_cart),
+                label: const Text('Shopping List'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepPurple, // Wireframe'deki mor renk
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: () {},
+                icon: const Icon(Icons.add),
+                label: const Text('Add / Edit Item'),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                ),
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  // Yardımcı Widget: Renkli Kategori Kartı
+  Widget _buildCategoryCard(String title, IconData icon, Color color) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.black12),
+      ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        leading: Icon(icon, size: 40, color: Colors.black54),
+        title: Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        ),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        onTap: () {
+           // Buradan detay sayfasına gidilebilir
+        },
       ),
     );
   }
