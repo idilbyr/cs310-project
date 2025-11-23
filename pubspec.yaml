@@ -22,7 +22,7 @@ flutter:
   # BURASI ÇOK ÖNEMLİ:
   # Senin yüklediğin logo.png'yi görmesi için bu satır şart.
   assets:
-    - assets/
+    - lib/assets/
 
   # Roboto fontunu şimdilik kapalı tutuyorum ki dosya yoksa hata vermesin.
   # Eğer font dosyasını da yüklersen başındaki # işaretlerini kaldırabilirsin.
