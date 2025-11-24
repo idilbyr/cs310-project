@@ -49,12 +49,12 @@ class AddEditHomeScreen extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => CategoryDetailScreen(
                       categoryName: "FRIDGE_1",
-                      themeColor: Colors.blue, // geçici renk
-                      iconPath: "assets/images/veg.png", // geçici ikon
-                      items: const [], // boş liste ya da senin item listen
+                      themeColor: Colors.blue,
+                      iconPath: "assets/images/veg.png",
+                      items: const [],
                     ),
                   ),
-                      (route) => false, // önceki rotaları temizler
+                      (route) => false,
                 );
               },
               icon: const Icon(Icons.arrow_back, size: 18, color: Colors.blue),
