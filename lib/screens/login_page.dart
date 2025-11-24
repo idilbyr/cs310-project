@@ -6,6 +6,7 @@ import 'signup_page.dart';
 import 'forgot_password_page.dart';
 
 class LoginPage extends StatefulWidget {
+  static const String routeName = '/login_page';
   const LoginPage({Key? key}) : super(key: key);
 
   @override

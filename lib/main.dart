@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fridge_note/screens/about_screen.dart';
 import 'package:fridge_note/screens/create_fridge_screen.dart';
+import 'screens/login_page.dart';
 // Berkan
 import 'screens/home_screen.dart';           // Screen 3
 import 'screens/fridge_overview_screen.dart'; // Screen 6
@@ -23,24 +24,27 @@ class MyApp extends StatelessWidget {
       
      
       theme: ThemeData(
-        primaryColor: AppColors.primaryColor,
-        scaffoldBackgroundColor: AppColors.backgroundColor,
-        fontFamily: 'Roboto',
-        useMaterial3: true,
-        // AppBar teması
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          iconTheme: IconThemeData(color: AppColors.textColor),
-          titleTextStyle: AppTextStyles.headerStyle,
+        primarySwatch: Colors.deepPurple,
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey.shade300),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey.shade300),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.deepPurple),
+          ),
         ),
       ),
-
-   
-      initialRoute: HomeScreen.routeName,
+      initialRoute: LoginPage.routeName,
 
       
       routes: {
+        LoginPage.routeName: (context) => const LoginPage(),
         // Screen 3: Ana Sayfa
         HomeScreen.routeName: (context) => const HomeScreen(),
         // Screen 6: Detay Sayfası
