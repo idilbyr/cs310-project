@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// Berkan'ın Ekranları
+// Berkan
 import 'screens/home_screen.dart';           // Screen 3
 import 'screens/fridge_overview_screen.dart'; // Screen 6
 // Eksik sayfalar için geçici sayfa
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       title: 'Berkan Branch Step 2.2',
       debugShowCheckedModeBanner: false,
       
-      // Tema Ayarları (Constants dosyasından)
+     
       theme: ThemeData(
         primaryColor: AppColors.primaryColor,
         scaffoldBackgroundColor: AppColors.backgroundColor,
@@ -35,10 +35,10 @@ class MyApp extends StatelessWidget {
         ),
       ),
 
-      // Uygulama açılınca İLK Ana Sayfa (Home) gelsin
+   
       initialRoute: HomeScreen.routeName,
 
-      // Rotalar (Sayfa Adresleri)
+      
       routes: {
         // Screen 3: Ana Sayfa
         HomeScreen.routeName: (context) => const HomeScreen(),
@@ -46,9 +46,7 @@ class MyApp extends StatelessWidget {
         // Screen 6: Detay Sayfası
         FridgeOverviewScreen.routeName: (context) => const FridgeOverviewScreen(),
 
-        // Screen 4 ve diğerleri bu branch'te yok.
-        // O yüzden Home Screen'deki "+" butonuna basınca hata vermesin diye
-        // onları DummyPage'e yönlendiriyoruz.
+       
         '/dummy': (context) => const DummyPage(),
         '/create_fridge': (context) => const DummyPage(), 
       },
