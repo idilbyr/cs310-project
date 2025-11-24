@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fridge_note/screens/home_screen.dart';
-import '../utils/constants_f.dart';
+import 'home_screen.dart';
+import '../utils/constants.dart';
 
 class CreateFridgeScreen extends StatefulWidget {
   static const String routeName = '/create_fridge';

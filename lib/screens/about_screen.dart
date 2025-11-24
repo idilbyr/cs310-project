@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../utils/constants_f.dart';
+import '../utils/constants.dart';
 
 class AboutScreen extends StatefulWidget {
   static const String routeName = '/about';

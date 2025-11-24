@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fridge_note/screens/fridge_overview_screen.dart';
 import 'add_item_screen.dart';
 import 'edit_item_screen.dart';
 import 'expiring_soon_screen.dart';
@@ -47,12 +48,7 @@ class AddEditHomeScreen extends StatelessWidget {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CategoryDetailScreen(
-                      categoryName: "FRIDGE_1",
-                      themeColor: Colors.blue,
-                      iconPath: "assets/images/veg.png",
-                      items: const [],
-                    ),
+                    builder: (context) => FridgeOverviewScreen(),
                   ),
                       (route) => false,
                 );

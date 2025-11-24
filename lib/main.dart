@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:fridge_note/screens/about_screen.dart';
-import 'package:fridge_note/screens/create_fridge_screen.dart';
+import '../screens/about_screen.dart';
+import '../screens/create_fridge_screen.dart';
 import 'screens/login_page.dart';
 // Berkan
 import 'screens/home_screen.dart';           // Screen 3
 import 'screens/fridge_overview_screen.dart'; // Screen 6
 // Eksik sayfalar için geçici sayfa
 // Renkler ve Tema
-import 'utils/constants_f.dart';
+import 'utils/constants.dart';
 // ALP
 import 'screens/add_item_screen.dart';
 import 'screens/edit_item_screen.dart';

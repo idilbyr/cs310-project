@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import '../utils/constants.dart';
-import 'package:flutter/material.dart';
-import 'detailed_category_screen.dart';
-import 'shopping_list.dart';
+import 'package:fridge_note/screens/add_edit_item_screen.dart';
+import 'detailed_category_screen.dart'; // Ensure this file exists
+import 'shopping_list.dart'; // Ensure this file exists
 import '../utils/item_data.dart';
 
 class FridgeOverviewScreen extends StatelessWidget {
@@ -123,7 +122,7 @@ class FridgeOverviewScreen extends StatelessWidget {
                 const SizedBox(height: 10),
                 Center(
                     child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => const AddEditHomeScreen()),);},
                         child: const Text("Add / Edit Item", style: TextStyle(color: Colors.grey))
                     )
                 ),

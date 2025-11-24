@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../utils//item_data.dart';
+import '../utils/item_data.dart';
 import 'add_edit_item_screen.dart';
 
 class ExpiringSoonScreen extends StatelessWidget {
