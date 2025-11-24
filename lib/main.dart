@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'lib\assets\item_data.dart'
-
+import 'package:fridge_note/models/fridge_item.dart';
+import 'package:fridge_note/screens/category_detail_screen.dart';
+import 'package:fridge_note/screens/shopping_list_screen.dart'; 
 void main() {
   runApp(const FridgeNoteApp());
 }
