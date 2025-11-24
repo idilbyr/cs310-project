@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../utils/constants.dart'; // Renkler buradan geliyor
-import 'create_fridge_screen.dart'; // Screen 4
-import 'fridge_overview_screen.dart'; // Screen 6
+import '../utils/constants.dart'; 
+import 'create_fridge_screen.dart'; 
+import 'fridge_overview_screen.dart';
 
 class HomeScreen extends StatelessWidget {
-  // Yönlendirme için rota ismi
+  
   static const String routeName = '/home_screen';
 
   const HomeScreen({super.key});
@@ -32,7 +32,7 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // 1. Arama Çubuğu
+              
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
                 child: TextField(
@@ -53,7 +53,7 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               
-              // 2. Link ile Katıl Yazısı
+         
               TextButton(
                 onPressed: () {
                   // Join Screen'e git (İleride eklenecek)
@@ -70,7 +70,7 @@ class HomeScreen extends StatelessWidget {
               
               const SizedBox(height: 40),
 
-              // 3. "My Fridge" Büyük Buton -> Screen 6'ya Gider
+              // 3. "My Fridge"  -> Screen 6'ya 
               ElevatedButton(
                 onPressed: () {
                   // Screen 6: Fridge Overview sayfasına yönlendirir
@@ -93,7 +93,7 @@ class HomeScreen extends StatelessWidget {
               // 4. "Create New" (+) Yuvarlak Buton -> Screen 4'e Gider
               InkWell(
                 onTap: () {
-                  // Screen 4: Create Fridge sayfasına yönlendirir
+                  // Screen 4: goes Create Fridge 
                   Navigator.pushNamed(context, CreateFridgeScreen.routeName);
                 },
                 child: Container(
@@ -134,7 +134,7 @@ class HomeScreen extends StatelessWidget {
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
         ],
         onTap: (index) {
-          // İleride diğer sayfalara geçiş eklenebilir
+          
         },
       ),
     );
