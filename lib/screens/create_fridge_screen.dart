@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fridge_note/screens/home_screen.dart';
 import '../utils/constants_f.dart';
-import 'temp_pages.dart';
 
 class CreateFridgeScreen extends StatefulWidget {
   static const String routeName = '/create_fridge';
@@ -21,7 +21,7 @@ class _CreateFridgeScreenState extends State<CreateFridgeScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Fridge Created Successfully!')),
       );
-      Navigator.pushReplacementNamed(context, DummyHomeScreen.routeName);
+      Navigator.pushReplacementNamed(context, HomeScreen.routeName);
     } else {
       showDialog(
         context: context,

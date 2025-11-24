@@ -47,7 +47,7 @@ class _AboutScreenState extends State<AboutScreen> {
                 child: Image.network(
                   'https://cdn-icons-png.flaticon.com/512/2728/2728078.png', 
                   height: 80,
-                  errorBuilder: (context, error, stackTrace) => const Text('Failed to load online image'),
+                  errorBuilder: (context, error, stackTrace) => const Text('Failed to load online images'),
                 ),
               ),
               const SizedBox(height: 20),
