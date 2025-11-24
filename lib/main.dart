@@ -8,6 +8,12 @@ import 'screens/fridge_overview_screen.dart'; // Screen 6
 // Eksik sayfalar için geçici sayfa
 // Renkler ve Tema
 import 'utils/constants_f.dart';
+// ALP
+import 'screens/add_item_screen.dart';
+import 'screens/edit_item_screen.dart';
+import 'screens/expiring_soon_screen.dart';
+import 'screens/add_edit_item_screen.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -52,6 +58,11 @@ class MyApp extends StatelessWidget {
         CreateFridgeScreen.routeName: (context) => const CreateFridgeScreen(),
         // Screen 12: Your Other Task
         AboutScreen.routeName: (context) => const AboutScreen(),
+        AddItemScreen.routeName: (context) => const AddItemScreen(),
+        EditItemScreen.routeName: (context) => const EditItemScreen(),
+        ExpiringSoonScreen.routeName: (context) => const ExpiringSoonScreen(),
+        AddEditHomeScreen.routeName: (context) => const AddEditHomeScreen(),
+
       },
     );
   }

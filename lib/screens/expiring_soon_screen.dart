@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'assets/item_data.dart';
+import '../assets/item_data.dart';
 import 'add_edit_item_screen.dart';
 
 class ExpiringSoonScreen extends StatelessWidget {
+  static const routeName = '/expiring_soon';
   const ExpiringSoonScreen({super.key});
 
   // temporary

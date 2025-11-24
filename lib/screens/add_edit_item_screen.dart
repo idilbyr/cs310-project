@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'add_item_screen.dart';
 import 'edit_item_screen.dart';
 import 'expiring_soon_screen.dart';
-import 'main.dart';
+import 'detailed_category_screen.dart';
+import '../main.dart';
 
 class AddEditHomeScreen extends StatelessWidget {
+  static const routeName = '/add_edit_item';
   const AddEditHomeScreen({super.key});
 
   @override
@@ -44,8 +46,15 @@ class AddEditHomeScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => const FridgeMainPage()),
-                      (route) => false, // clear
+                  MaterialPageRoute(
+                    builder: (context) => CategoryDetailScreen(
+                      categoryName: "FRIDGE_1",
+                      themeColor: Colors.blue, // geçici renk
+                      iconPath: "assets/images/veg.png", // geçici ikon
+                      items: const [], // boş liste ya da senin item listen
+                    ),
+                  ),
+                      (route) => false, // önceki rotaları temizler
                 );
               },
               icon: const Icon(Icons.arrow_back, size: 18, color: Colors.blue),
@@ -54,6 +63,7 @@ class AddEditHomeScreen extends StatelessWidget {
                 style: TextStyle(color: Colors.blue, fontSize: 14),
               ),
             ),
+
             const SizedBox(height: 8),
 
             // fridge title

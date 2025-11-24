@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
-class EditItemScreen extends StatefulWidget {
-  const EditItemScreen({super.key});
+class AddItemScreen extends StatefulWidget {
+  static const routeName = '/add_item';
+  const AddItemScreen({super.key});
 
   @override
-  State<EditItemScreen> createState() => _EditItemScreenState();
+  State<AddItemScreen> createState() => _AddItemScreenState();
 }
 
-class _EditItemScreenState extends State<EditItemScreen> {
+class _AddItemScreenState extends State<AddItemScreen> {
   String selectedCategory = 'Vegetables';
   String selectedUnit = 'pcs';
   int amount = 1;
@@ -15,7 +16,6 @@ class _EditItemScreenState extends State<EditItemScreen> {
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController brandController = TextEditingController();
-  final TextEditingController searchController = TextEditingController();
 
   Future<void> _pickDate() async {
     final DateTime now = DateTime.now();
@@ -44,7 +44,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
           onPressed: () {},
         ),
         title: const Text(
-          "Edit Item",
+          "Add Item",
           style: TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
@@ -90,27 +90,9 @@ class _EditItemScreenState extends State<EditItemScreen> {
               "Total Items:",
               style: TextStyle(color: Colors.grey, fontSize: 16),
             ),
-            const SizedBox(height: 16),
-
-            // search bar
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              decoration: BoxDecoration(
-                color: const Color(0xFFD8C6F0),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: TextField(
-                controller: searchController,
-                decoration: const InputDecoration(
-                  icon: Icon(Icons.search, color: Colors.black),
-                  hintText: "Search for items",
-                  border: InputBorder.none,
-                ),
-              ),
-            ),
             const SizedBox(height: 20),
 
-            // category dropdown
+            // CATEGORY dropdown menu
             DropdownButtonFormField<String>(
               value: selectedCategory,
               items: const [
@@ -225,19 +207,19 @@ class _EditItemScreenState extends State<EditItemScreen> {
             ),
             const SizedBox(height: 30),
 
-            // save item
+            // save
             SizedBox(
               width: double.infinity,
               height: 60,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF8E7CC3),
+                  backgroundColor: const Color(0xFF8E7CC3), // mor
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
                 onPressed: () {
-                  // save edits
+                  // Save işlemleri
                 },
                 child: const Text(
                   "Save Item",
