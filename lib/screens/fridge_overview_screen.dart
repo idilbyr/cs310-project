@@ -22,7 +22,7 @@ class FridgeOverviewScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Renkli Kategoriler Listesi
+           
             Expanded(
               child: ListView(
                 children: [
@@ -35,13 +35,13 @@ class FridgeOverviewScreen extends StatelessWidget {
               ),
             ),
             
-            // Alt Butonlar
+          
             const SizedBox(height: 10),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () {
-                  // Shopping List sayfasına git (Henüz yok)
+                 
                 },
                 icon: const Icon(Icons.shopping_cart),
                 label: const Text('Shopping List'),
@@ -69,7 +69,7 @@ class FridgeOverviewScreen extends StatelessWidget {
     );
   }
 
-  // Kart Tasarımı Yardımcı Fonksiyonu
+  
   Widget _buildCategoryCard(String title, IconData icon, Color color) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -87,7 +87,7 @@ class FridgeOverviewScreen extends StatelessWidget {
         ),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
         onTap: () {
-           // Detay sayfasına git
+          
         },
       ),
     );
