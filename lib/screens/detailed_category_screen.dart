@@ -1,9 +1,11 @@
-
+import 'package:flutter/material.dart';
+import '../utils/item_data.dart';
 
 // ==========================================
 // 3. UPDATED CATEGORY DETAIL SCREEN
 // ==========================================
 class CategoryDetailScreen extends StatelessWidget {
+  static const routeName = '/detailed_category_screen';
   final String categoryName;
   final Color themeColor;
   final String iconPath;
@@ -215,3 +217,4 @@ class CategoryDetailScreen extends StatelessWidget {
     );
   }
 }
+
