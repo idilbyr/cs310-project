@@ -50,12 +50,12 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
     const purpleTheme = Color(0xFF7E57C2);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white, // Removed
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        // backgroundColor: Colors.white, // Removed
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.grey),
+          icon: const Icon(Icons.arrow_back), // Removed hardcoded color
           onPressed: () => Navigator.pop(context),
         ),
       ),

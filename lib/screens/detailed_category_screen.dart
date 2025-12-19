@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/food_model.dart';
+import 'edit_item_screen.dart';
 
 // ==========================================
 // 3. UPDATED CATEGORY DETAIL SCREEN
@@ -43,7 +44,7 @@ class CategoryDetailScreen extends StatelessWidget {
                 children: [
                   InkWell(
                     onTap: () => Navigator.pop(context),
-                    child: const Icon(Icons.arrow_back, color: Colors.black, size: 28),
+                    child: const Icon(Icons.arrow_back, size: 28), // Removed hardcoded color
                   ),
                   const SizedBox(width: 15),
 
@@ -127,7 +128,7 @@ class CategoryDetailScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 itemCount: items.length,
                 itemBuilder: (context, index) {
-                  return _buildTableItemCard(items[index]);
+                  return _buildTableItemCard(context, items[index]);
                 },
               ),
             ),
@@ -137,28 +138,47 @@ class CategoryDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTableItemCard(FoodModel item) {
+  Widget _buildTableItemCard(BuildContext context, FoodModel item) {
     final labelBg = themeColor.withOpacity(0.4);
     final valueBg = themeColor.withOpacity(0.15);
     final borderColor = themeColor;
     
     final formattedDate = "${item.expirationDate.day}/${item.expirationDate.month}/${item.expirationDate.year}";
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      decoration: BoxDecoration(
-        border: Border.all(color: borderColor, width: 2),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        children: [
-          _buildTableRow("Name:", item.name, labelBg, valueBg, borderColor, isTop: true),
-          _buildTableRow("Amount:", "${item.amount} ${item.unit}", labelBg, valueBg, borderColor),
-          _buildTableRow("Brand:", item.brand, labelBg, valueBg, borderColor),
-          _buildTableRow("EXP:", formattedDate, labelBg, valueBg, borderColor),
-          _buildTableRow("Notes:", item.notes, labelBg, valueBg, borderColor, isBottom: true),
-        ],
-      ),
+    return Stack(
+      children: [
+        Container(
+          margin: const EdgeInsets.only(bottom: 20),
+          decoration: BoxDecoration(
+            border: Border.all(color: borderColor, width: 2),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            children: [
+              _buildTableRow("Name:", item.name, labelBg, valueBg, borderColor, isTop: true),
+              _buildTableRow("Amount:", "${item.amount} ${item.unit}", labelBg, valueBg, borderColor),
+              _buildTableRow("Brand:", item.brand, labelBg, valueBg, borderColor),
+              _buildTableRow("EXP:", formattedDate, labelBg, valueBg, borderColor),
+              _buildTableRow("Notes:", item.notes, labelBg, valueBg, borderColor, isBottom: true),
+            ],
+          ),
+        ),
+        Positioned(
+          top: 5,
+          right: 5,
+          child: IconButton(
+            icon: const Icon(Icons.edit, color: Colors.black54),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditItemScreen(food: item),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 

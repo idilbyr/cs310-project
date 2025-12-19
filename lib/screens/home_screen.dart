@@ -17,11 +17,12 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('FridgeNote', style: AppTextStyles.headerStyle),
+        automaticallyImplyLeading: false,
+        title: Text('FridgeNote', style: AppTextStyles.headerStyle.copyWith(color: Theme.of(context).textTheme.titleLarge?.color)),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        // backgroundColor: Colors.white, // Removed
         elevation: 0,
-        iconTheme: const IconThemeData(color: AppColors.textColor),
+        // iconTheme: const IconThemeData(color: AppColors.textColor), // Removed
         actions: [
           Consumer<ThemeProvider>(
             builder: (context, themeProvider, child) {
@@ -72,11 +73,11 @@ class HomeScreen extends StatelessWidget {
                 onPressed: () {
                   // Join Screen'e git (İleride eklenecek)
                 },
-                child: const Text(
+                child: Text(
                   'Join via link',
                   style: TextStyle(
                     decoration: TextDecoration.underline,
-                    color: AppColors.textColor,
+                    color: Theme.of(context).brightness == Brightness.dark ? Colors.white : AppColors.textColor,
                     fontSize: 16,
                   ),
                 ),

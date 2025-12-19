@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
 
       if (error == null) {
         if (!mounted) return;
-        Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+        Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
       } else {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
@@ -58,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white, // Removed to use theme color
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(

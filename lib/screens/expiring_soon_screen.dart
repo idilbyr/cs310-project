@@ -28,22 +28,27 @@ class ExpiringSoonScreen extends StatelessWidget {
     final items = getDummyItems();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white, // Removed
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.black87),
-          onPressed: () {},
+          icon: const Icon(Icons.arrow_back), // Changed to arrow_back
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const AddEditHomeScreen()),
+            );
+          },
         ),
         title: const Text(
           "Expiring Soon List",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold), // Removed color
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        // backgroundColor: Colors.white, // Removed
         elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.account_circle, color: Colors.black87),
+            icon: const Icon(Icons.account_circle), // Removed color
             onPressed: () {},
           ),
         ],
@@ -54,20 +59,6 @@ class ExpiringSoonScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // back to add-edit
-            TextButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const AddEditHomeScreen()),
-                );
-              },
-              icon: const Icon(Icons.arrow_back, size: 18, color: Colors.blue),
-              label: const Text(
-                "Back to Add / Edit",
-                style: TextStyle(color: Colors.blue, fontSize: 14),
-              ),
-            ),
             const SizedBox(height: 4),
 
             const Text(
@@ -84,16 +75,16 @@ class ExpiringSoonScreen extends StatelessWidget {
             // search bar
             Container(
               decoration: BoxDecoration(
-                color: const Color(0xFFD1C4E9), // light purple
+                color: Theme.of(context).brightness == Brightness.dark ? Colors.grey[800] : const Color(0xFFD1C4E9),
                 borderRadius: BorderRadius.circular(25),
               ),
-              child: const TextField(
+              child: TextField(
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.search, color: Colors.black54),
+                  prefixIcon: Icon(Icons.search, color: Theme.of(context).iconTheme.color),
                   hintText: "Search for items",
-                  hintStyle: TextStyle(color: Colors.black54),
+                  hintStyle: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6)),
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(vertical: 14),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 14),
                 ),
               ),
             ),

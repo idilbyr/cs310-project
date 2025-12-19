@@ -28,18 +28,20 @@ class _AboutScreenState extends State<AboutScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              
               Center(
                 child: Container(
-                  height: 100, width: 100, color: Colors.grey[300],
+                  height: 100, width: 100, 
+                  color: Theme.of(context).brightness == Brightness.dark ? Colors.grey[800] : Colors.grey[300],
                   child: const Icon(Icons.kitchen, size: 50, color: AppColors.primaryColor),
                 ),
               ),
               const SizedBox(height: 10),
-              const Center(child: Text('FridgeMaster v1.0', style: AppTextStyles.headerStyle)),
+              Center(child: Text('FridgeMaster v1.0', style: AppTextStyles.headerStyle.copyWith(color: Theme.of(context).textTheme.titleLarge?.color))),
               const Divider(),
               const Text('How to Use:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
               const SizedBox(height: 8),
-              const Text('1. Create a fridge.\n2. Share code.\n3. Add items.', style: AppTextStyles.bodyStyle),
+              Text('1. Create a fridge.\n2. Share code.\n3. Add items.', style: AppTextStyles.bodyStyle.copyWith(color: Theme.of(context).textTheme.bodyMedium?.color)),
               const SizedBox(height: 20),
               const Text('Powered By:', style: TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),

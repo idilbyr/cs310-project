@@ -33,6 +33,28 @@ class FirestoreService{
             'amount': newAmount,
         });
     }
+
+    Future<void> updateFood({
+      required String docId,
+      required String name,
+      required String category,
+      required String brand,
+      required double amount,
+      required String unit,
+      required String notes,
+      required DateTime expirationDate,
+    }) async {
+      await _db.collection('foods').doc(docId).update({
+        'name': name,
+        'category': category,
+        'brand': brand,
+        'amount': amount,
+        'unit': unit,
+        'notes': notes,
+        'expirationDate': Timestamp.fromDate(expirationDate),
+      });
+    }
+
     Future<void> deleteFood(String docId) async {
         await _db.collection('foods').doc(docId).delete();
     }

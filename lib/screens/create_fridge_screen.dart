@@ -46,7 +46,7 @@ class _CreateFridgeScreenState extends State<CreateFridgeScreen> {
           key: _formKey,
           child: ListView(
             children: [
-              const Text('Fridge Details', style: AppTextStyles.headerStyle),
+              Text('Fridge Details', style: AppTextStyles.headerStyle.copyWith(color: Theme.of(context).textTheme.titleLarge?.color)),
               const SizedBox(height: 20),
               TextFormField(
                 controller: _nameController,

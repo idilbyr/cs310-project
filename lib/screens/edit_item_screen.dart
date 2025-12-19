@@ -1,30 +1,46 @@
 import 'package:flutter/material.dart';
+import '../models/food_model.dart';
+import '../services/firestore_services.dart';
 
 class EditItemScreen extends StatefulWidget {
   static const routeName = '/edit_item';
-  const EditItemScreen({super.key});
+  final FoodModel food;
+
+  const EditItemScreen({super.key, required this.food});
 
   @override
   State<EditItemScreen> createState() => _EditItemScreenState();
 }
 
 class _EditItemScreenState extends State<EditItemScreen> {
-  String selectedCategory = 'Vegetables';
-  String selectedUnit = 'pcs';
-  int amount = 1;
-  DateTime? selectedDate;
+  late String selectedCategory;
+  late String selectedUnit;
+  late double amount;
+  late DateTime selectedDate;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController brandController = TextEditingController();
-  final TextEditingController searchController = TextEditingController();
+  final TextEditingController notesController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    selectedCategory = widget.food.category;
+    selectedUnit = widget.food.unit;
+    amount = widget.food.amount;
+    selectedDate = widget.food.expirationDate;
+    nameController.text = widget.food.name;
+    brandController.text = widget.food.brand;
+    notesController.text = widget.food.notes;
+  }
 
   Future<void> _pickDate() async {
     final DateTime now = DateTime.now();
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: selectedDate ?? now,
+      initialDate: selectedDate,
       firstDate: now,
-      lastDate: DateTime(now.year + 2),
+      lastDate: DateTime(now.year + 5),
     );
     if (picked != null) {
       setState(() {
@@ -33,27 +49,52 @@ class _EditItemScreenState extends State<EditItemScreen> {
     }
   }
 
+  Future<void> _saveItem() async {
+    try {
+      await FirestoreService().updateFood(
+        docId: widget.food.id,
+        name: nameController.text.trim(),
+        category: selectedCategory,
+        brand: brandController.text.trim(),
+        amount: amount,
+        unit: selectedUnit,
+        notes: notesController.text.trim(),
+        expirationDate: selectedDate,
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Item updated successfully!')),
+        );
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error updating item: $e')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white, // Removed
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        // backgroundColor: Colors.white, // Removed
         elevation: 0,
         title: const Text(
           "Edit Item",
           style: TextStyle(
-            color: Colors.black,
+            // color: Colors.black, // Removed
             fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 12),
-            child: Icon(Icons.account_circle, color: Colors.black, size: 28),
-          ),
-        ],
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back), // Removed color
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
 
       body: SingleChildScrollView(
@@ -61,61 +102,17 @@ class _EditItemScreenState extends State<EditItemScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
-            TextButton.icon(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(Icons.arrow_back, size: 18, color: Colors.blue),
-              label: const Text(
-                "Back to Add / Edit",
-                style: TextStyle(color: Colors.blue, fontSize: 14),
-              ),
-            ),
-            const SizedBox(height: 8),
-
-            const Text(
-              "Fridge 1",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 4),
-
-            const Text(
-              "Total Items:",
-              style: TextStyle(color: Colors.grey, fontSize: 16),
-            ),
-            const SizedBox(height: 16),
-
-            // search bar
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              decoration: BoxDecoration(
-                color: const Color(0xFFD8C6F0),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: TextField(
-                controller: searchController,
-                decoration: const InputDecoration(
-                  icon: Icon(Icons.search, color: Colors.black),
-                  hintText: "Search for items",
-                  border: InputBorder.none,
-                ),
-              ),
-            ),
             const SizedBox(height: 20),
 
             // category dropdown
             DropdownButtonFormField<String>(
-              value: selectedCategory,
+              value: ['Vegetables', 'Meat', 'Fish', 'Dairy', 'Fruits', 'Other'].contains(selectedCategory) ? selectedCategory : 'Other',
               items: const [
                 DropdownMenuItem(value: 'Vegetables', child: Text('Vegetables')),
                 DropdownMenuItem(value: 'Meat', child: Text('Meat')),
                 DropdownMenuItem(value: 'Fish', child: Text('Fish')),
                 DropdownMenuItem(value: 'Dairy', child: Text('Dairy')),
-                DropdownMenuItem(value: 'Fruit', child: Text('Fruit')),
+                DropdownMenuItem(value: 'Fruits', child: Text('Fruits')),
                 DropdownMenuItem(value: 'Other', child: Text('Other')),
               ],
               onChanged: (value) {
@@ -167,7 +164,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    controller: TextEditingController(text: amount.toString()),
+                    controller: TextEditingController(text: amount.toStringAsFixed(amount.truncateToDouble() == amount ? 0 : 1)),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -176,7 +173,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                 }),
                 const SizedBox(width: 4),
                 _roundButton(Icons.remove, () {
-                  if (amount > 1) setState(() => amount--);
+                  if (amount > 0.5) setState(() => amount--);
                 }),
                 const SizedBox(width: 8),
                 Expanded(
@@ -209,9 +206,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                 child: TextField(
                   decoration: InputDecoration(
                     labelText: "Expiration Date",
-                    hintText: selectedDate == null
-                        ? "Select a date"
-                        : "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}",
+                    hintText: "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
                     suffixIcon: const Icon(Icons.calendar_today),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -219,6 +214,19 @@ class _EditItemScreenState extends State<EditItemScreen> {
                   ),
                 ),
               ),
+            ),
+            const SizedBox(height: 16),
+
+             // notes
+            TextField(
+              controller: notesController,
+              decoration: InputDecoration(
+                labelText: "Notes",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              maxLines: 3,
             ),
             const SizedBox(height: 30),
 
@@ -233,11 +241,9 @@ class _EditItemScreenState extends State<EditItemScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                onPressed: () {
-                  // save edits
-                },
+                onPressed: _saveItem,
                 child: const Text(
-                  "Save Item",
+                  "Save Changes",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,

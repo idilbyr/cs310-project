@@ -18,6 +18,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController brandController = TextEditingController();
+  final TextEditingController notesController = TextEditingController();
 
   Future<void> _pickDate() async {
     final DateTime now = DateTime.now();
@@ -37,14 +38,14 @@ class _AddItemScreenState extends State<AddItemScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white, // Removed
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        // backgroundColor: Colors.white, // Removed
         elevation: 0,
         title: const Text(
           "Add Item",
           style: TextStyle(
-            color: Colors.black,
+            // color: Colors.black, // Removed
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -52,7 +53,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
         actions: const [
           Padding(
             padding: EdgeInsets.only(right: 12),
-            child: Icon(Icons.account_circle, color: Colors.black, size: 28),
+            child: Icon(Icons.account_circle, size: 28), // Removed color
           ),
         ],
       ),
@@ -63,16 +64,6 @@ class _AddItemScreenState extends State<AddItemScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            TextButton.icon(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(Icons.arrow_back, size: 18, color: Colors.blue),
-              label: const Text(
-                "Back to Add / Edit",
-                style: TextStyle(color: Colors.blue, fontSize: 14),
-              ),
-            ),
             const SizedBox(height: 8),
 
             const Text(
@@ -203,6 +194,19 @@ class _AddItemScreenState extends State<AddItemScreen> {
                 ),
               ),
             ),
+            const SizedBox(height: 16),
+
+            // notes
+            TextField(
+              controller: notesController,
+              decoration: InputDecoration(
+                labelText: "Notes",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              maxLines: 3,
+            ),
             const SizedBox(height: 30),
 
             // save
@@ -239,7 +243,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                       brand: brandController.text,
                       amount: amount.toDouble(),
                       unit: selectedUnit,
-                      notes: '', 
+                      notes: notesController.text.trim(), 
                       expirationDate: selectedDate ?? DateTime.now().add(const Duration(days: 7)),
                       userId: user.uid,
                     );

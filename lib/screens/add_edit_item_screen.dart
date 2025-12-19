@@ -13,14 +13,23 @@ class AddEditHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white, // Removed
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const FridgeOverviewScreen()),
+            );
+          },
+        ),
+        // backgroundColor: Colors.white, // Removed
         elevation: 0,
         title: const Text(
           "Add / Edit Item",
           style: TextStyle(
-            color: Colors.black,
+            // color: Colors.black, // Removed
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -28,7 +37,7 @@ class AddEditHomeScreen extends StatelessWidget {
         actions: const [
           Padding(
             padding: EdgeInsets.only(right: 12),
-            child: Icon(Icons.account_circle, color: Colors.black, size: 28),
+            child: Icon(Icons.account_circle, size: 28), // Removed color
           ),
         ],
       ),
@@ -38,20 +47,6 @@ class AddEditHomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // back to fridgemain
-            TextButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const FridgeOverviewScreen()),
-                );
-              },
-              icon: const Icon(Icons.arrow_back, size: 18, color: Colors.blue),
-              label: const Text(
-                "Back to Fridge List",
-                style: TextStyle(color: Colors.blue, fontSize: 14),
-              ),
-            ),
 
             const SizedBox(height: 8),
 
@@ -61,7 +56,7 @@ class AddEditHomeScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                // color: Colors.black, // Removed
               ),
             ),
             const SizedBox(height: 4),
@@ -94,9 +89,13 @@ class AddEditHomeScreen extends StatelessWidget {
               context,
               label: "Edit Item",
               onTap: () {
-                Navigator.push(
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Please select an item from the fridge list to edit.')),
+                );
+                Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => const EditItemScreen()),
+                  MaterialPageRoute(builder: (context) => const FridgeOverviewScreen()),
+                  (route) => false,
                 );
               },
             ),

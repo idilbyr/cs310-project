@@ -21,9 +21,18 @@ class FridgeOverviewScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('FRIDGE_1', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Colors.black),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+            );
+          },
+        ),
+        title: const Text('FRIDGE_1'), // Removed hardcoded style
+        // backgroundColor: Colors.white, // Removed
+        // iconTheme: const IconThemeData(color: Colors.black), // Removed
         actions: [
           IconButton(icon: const Icon(Icons.search), onPressed: () {}),
           IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
@@ -53,18 +62,6 @@ class FridgeOverviewScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const HomeScreen()),
-                    );
-                  },
-                  label: const Text(
-                    "Back to Home Page",
-                    style: TextStyle(color: Colors.blue, fontSize: 14),
-                  ),
-                ),
                
               Expanded(
                 child: ListView(

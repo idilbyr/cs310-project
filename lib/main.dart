@@ -108,7 +108,6 @@ class MyApp extends StatelessWidget {
         // Screen 12: Your Other Task
         AboutScreen.routeName: (context) => const AboutScreen(),
         AddItemScreen.routeName: (context) => const AddItemScreen(),
-        EditItemScreen.routeName: (context) => const EditItemScreen(),
         ExpiringSoonScreen.routeName: (context) => const ExpiringSoonScreen(),
         AddEditHomeScreen.routeName: (context) => const AddEditHomeScreen(),
         ShoppingListScreen.routeName: (context) => const ShoppingListScreen(),
