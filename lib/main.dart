@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'providers/theme__provider.dart';
+import 'providers/auth_providers.dart';
 import 'screens/about_screen.dart';
 import 'screens/create_fridge_screen.dart';
 import 'screens/login_page.dart';
@@ -18,6 +19,7 @@ import 'screens/add_item_screen.dart';
 import 'screens/edit_item_screen.dart';
 import 'screens/expiring_soon_screen.dart';
 import 'screens/add_edit_item_screen.dart';
+import 'screens/shopping_list.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +31,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
       child: const MyApp(),
     ),
@@ -108,6 +111,7 @@ class MyApp extends StatelessWidget {
         EditItemScreen.routeName: (context) => const EditItemScreen(),
         ExpiringSoonScreen.routeName: (context) => const ExpiringSoonScreen(),
         AddEditHomeScreen.routeName: (context) => const AddEditHomeScreen(),
+        ShoppingListScreen.routeName: (context) => const ShoppingListScreen(),
       },
     );
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../services/auth_service.dart';
-import '../models/user.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth_providers.dart';
 import 'home_screen.dart';
 import 'signup_page.dart';
 import 'forgot_password_page.dart';
@@ -14,12 +14,12 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _rememberMe = false;
   bool _isLoading = false;
-  final AuthService _authService = AuthService();
 
   @override
   void dispose() {
@@ -32,24 +32,22 @@ class _LoginPageState extends State<LoginPage> {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
 
-      User? user = await _authService.login(
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      String? error = await authProvider.login(
         _usernameController.text.trim(),
         _passwordController.text,
       );
 
       setState(() => _isLoading = false);
 
-      if (user != null) {
+      if (error == null) {
         if (!mounted) return;
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-        );
+        Navigator.pushReplacementNamed(context, HomeScreen.routeName);
       } else {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Invalid credentials. Please try again.'),
+          SnackBar(
+            content: Text(error),
             backgroundColor: Colors.red,
           ),
         );
@@ -76,8 +74,8 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 48),
                   TextFormField(
                     controller: _usernameController,
-                    decoration: const InputDecoration(labelText: 'Username', hintText: 'Enter your username or email'),
-                    validator: (value) => value == null || value.isEmpty ? 'Please enter your username' : null,
+                    decoration: const InputDecoration(labelText: 'Email', hintText: 'Enter your email'),
+                    validator: (value) => value == null || value.isEmpty ? 'Please enter your email' : null,
                   ),
                   const SizedBox(height: 16),
                   TextFormField(

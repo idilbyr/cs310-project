@@ -4,6 +4,8 @@ import '../providers/theme__provider.dart';
 import '../utils/constants.dart'; 
 import 'create_fridge_screen.dart'; 
 import 'fridge_overview_screen.dart';
+import 'shopping_list.dart';
+import 'about_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   
@@ -146,7 +148,9 @@ class HomeScreen extends StatelessWidget {
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
         ],
         onTap: (index) {
-          
+        if (index == 2) {
+            Navigator.pushNamed(context, AboutScreen.routeName);
+          }
         },
       ),
     );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/user.dart';
-import '../services/auth_service.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth_providers.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -17,7 +17,6 @@ class _SignUpPageState extends State<SignUpPage> {
   final _confirmPasswordController = TextEditingController();
   bool _acceptTerms = false;
   bool _isLoading = false;
-  final AuthService _authService = AuthService();
 
   @override
   void dispose() {
@@ -39,17 +38,15 @@ class _SignUpPageState extends State<SignUpPage> {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
 
-      User newUser = User(
-        email: _emailController.text.trim(),
-        username: _usernameController.text.trim(),
-        password: _passwordController.text,
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      String? error = await authProvider.signUp(
+        _emailController.text.trim(),
+        _passwordController.text,
       );
-
-      bool success = await _authService.signUp(newUser);
 
       setState(() => _isLoading = false);
 
-      if (success) {
+      if (error == null) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Account created successfully!'), backgroundColor: Colors.green),
@@ -58,7 +55,7 @@ class _SignUpPageState extends State<SignUpPage> {
       } else {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('User already exists. Please use different credentials.'), backgroundColor: Colors.red),
+          SnackBar(content: Text(error), backgroundColor: Colors.red),
         );
       }
     }

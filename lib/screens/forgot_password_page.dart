@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../services/auth_service.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth_providers.dart';
 import 'login_page.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
@@ -11,17 +12,12 @@ class ForgotPasswordPage extends StatefulWidget {
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final _formKey = GlobalKey<FormState>();
-  final _identifierController = TextEditingController();
-  final _newPasswordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
+  final _emailController = TextEditingController();
   bool _isLoading = false;
-  final AuthService _authService = AuthService();
 
   @override
   void dispose() {
-    _identifierController.dispose();
-    _newPasswordController.dispose();
-    _confirmPasswordController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
@@ -29,17 +25,17 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
 
-      bool success = await _authService.resetPassword(
-        _identifierController.text.trim(),
-        _newPasswordController.text,
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      String? error = await authProvider.resetPassword(
+        _emailController.text.trim(),
       );
 
       setState(() => _isLoading = false);
 
-      if (success) {
+      if (error == null) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Password reset successfully!'), backgroundColor: Colors.green),
+          const SnackBar(content: Text('Password reset email sent!'), backgroundColor: Colors.green),
         );
         Navigator.pushAndRemoveUntil(
           context,
@@ -49,7 +45,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       } else {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('User not found. Please check your username or email.'), backgroundColor: Colors.red),
+          SnackBar(content: Text(error), backgroundColor: Colors.red),
         );
       }
     }
@@ -80,32 +76,14 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   const SizedBox(height: 16),
                   const Text('Reset Password', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
                   const SizedBox(height: 8),
-                  Text('Enter your username or email and new password', style: TextStyle(fontSize: 14, color: Colors.grey[600]), textAlign: TextAlign.center),
+                  Text('Enter your email to receive a password reset link', style: TextStyle(fontSize: 14, color: Colors.grey[600]), textAlign: TextAlign.center),
                   const SizedBox(height: 48),
                   TextFormField(
-                    controller: _identifierController,
-                    decoration: const InputDecoration(labelText: 'Username or Email', hintText: 'Enter your username or email', prefixIcon: Icon(Icons.person)),
-                    validator: (value) => value == null || value.isEmpty ? 'Please enter your username or email' : null,
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _newPasswordController,
-                    obscureText: true,
-                    decoration: const InputDecoration(labelText: 'New Password', hintText: 'Enter your new password', prefixIcon: Icon(Icons.lock)),
+                    controller: _emailController,
+                    decoration: const InputDecoration(labelText: 'Email', hintText: 'Enter your email', prefixIcon: Icon(Icons.email)),
                     validator: (value) {
-                      if (value == null || value.isEmpty) return 'Please enter a new password';
-                      if (value.length < 6) return 'Password must be at least 6 characters';
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _confirmPasswordController,
-                    obscureText: true,
-                    decoration: const InputDecoration(labelText: 'Confirm New Password', hintText: 'Confirm your new password', prefixIcon: Icon(Icons.lock_outline)),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) return 'Please confirm your new password';
-                      if (value != _newPasswordController.text) return 'Passwords do not match';
+                      if (value == null || value.isEmpty) return 'Please enter your email';
+                      if (!value.contains('@')) return 'Please enter a valid email';
                       return null;
                     },
                   ),
@@ -122,7 +100,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       ),
                       child: _isLoading
                           ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                          : const Text('Reset Password', style: TextStyle(fontSize: 16)),
+                          : const Text('Send Reset Link', style: TextStyle(fontSize: 16)),
                     ),
                   ),
                   const SizedBox(height: 16),
