@@ -38,14 +38,14 @@ class _AddItemScreenState extends State<AddItemScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.white, // Removed
+      // backgroundColor removed to use theme color
       appBar: AppBar(
-        // backgroundColor: Colors.white, // Removed
+        // backgroundColor removed to use theme color
         elevation: 0,
         title: const Text(
           "Add Item",
           style: TextStyle(
-            // color: Colors.black, // Removed
+            // color removed to use theme color
             fontWeight: FontWeight.bold,
           ),
         ),

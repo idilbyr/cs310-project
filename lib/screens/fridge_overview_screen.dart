@@ -31,8 +31,8 @@ class FridgeOverviewScreen extends StatelessWidget {
           },
         ),
         title: const Text('FRIDGE_1'), // Removed hardcoded style
-        // backgroundColor: Colors.white, // Removed
-        // iconTheme: const IconThemeData(color: Colors.black), // Removed
+        // backgroundColor removed to use theme color
+        // iconTheme: const IconThemeData(color: Colors.black), // Removed (by idil)
         actions: [
           IconButton(icon: const Icon(Icons.search), onPressed: () {}),
           IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),

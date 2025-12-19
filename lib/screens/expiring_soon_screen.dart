@@ -1,34 +1,53 @@
 import 'package:flutter/material.dart';
-import '../utils/item_data.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../models/food_model.dart';
+import '../services/firestore_services.dart';
 import 'add_edit_item_screen.dart';
+//NOTE: since the calculation of the color base on time, i am changing the logichere.
+// Now the colors are base on certain day ranges than percentages
+// 0-3 days -> red
+// 4-7 days -> orange
+// 8-15 days -> yellow
+// 16+ days -> green
 
-class ExpiringSoonScreen extends StatelessWidget {
+class ExpiringSoonScreen extends StatefulWidget {
   static const routeName = '/expiring_soon';
   const ExpiringSoonScreen({super.key});
 
-  // temporary
-  List<FridgeItem> getDummyItems() {
-    return [
-      FridgeItem("Milk", "1L", "Pınar", "1 day", "Dairy product"),
-      FridgeItem("Chicken", "500g", "Banvit", "2 days", "Store in freezer"),
-      FridgeItem("Apples", "4 pcs", "Local", "3 days", "Organic apples"),
-      FridgeItem("Yogurt", "2 cups", "Sütaş", "4 days", "Low-fat"),
-      FridgeItem("Carrots", "1kg", "Organic", "5 days", "Fresh batch"),
-    ];
-  }
+  @override
+  State<ExpiringSoonScreen> createState() => _ExpiringSoonScreenState();
+}
+
+class _ExpiringSoonScreenState extends State<ExpiringSoonScreen> {
+  String _searchText = "";
 
   Color getCardColor(int daysLeft) {
-    if (daysLeft <= 1) return const Color(0xFFFF8A80); // red
-    if (daysLeft <= 3) return const Color(0xFFFFE082); // orange
-    return const Color(0xFFFFF59D); // yellow
+    if (daysLeft <= 3) return const Color(0xFFffcdd2); // Red 100
+    if (daysLeft <= 7) return const Color(0xFFffe0b2); // Orange 100
+    if (daysLeft <= 15) return const Color(0xFFfff9c4); // Yellow 100
+    return const Color(0xFFc8e6c9); // Green 100
+  }
+
+  double calculatePercentage(DateTime createdAt, DateTime expirationDate) {
+    final now = DateTime.now();
+    final totalLifetime = expirationDate.difference(createdAt).inMinutes;
+    final elapsed = now.difference(createdAt).inMinutes;
+
+    if (totalLifetime <= 0) return 100.0; // Avoid division by zero, treat as expired/urgent
+    
+    double pct = (elapsed / totalLifetime) * 100;
+    return pct.clamp(0.0, 100.0);
   }
 
   @override
   Widget build(BuildContext context) {
-    final items = getDummyItems();
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return const Scaffold(body: Center(child: Text("Please log in")));
+    }
 
     return Scaffold(
-      // backgroundColor: Colors.white, // Removed
+      // backgroundColor removed
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back), // Changed to arrow_back
@@ -44,7 +63,6 @@ class ExpiringSoonScreen extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.bold), // Removed color
         ),
         centerTitle: true,
-        // backgroundColor: Colors.white, // Removed
         elevation: 0,
         actions: [
           IconButton(
@@ -79,6 +97,11 @@ class ExpiringSoonScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(25),
               ),
               child: TextField(
+                onChanged: (value) {
+                  setState(() {
+                    _searchText = value.toLowerCase();
+                  });
+                },
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.search, color: Theme.of(context).iconTheme.color),
                   hintText: "Search for items",
@@ -101,54 +124,89 @@ class ExpiringSoonScreen extends StatelessWidget {
 
             // item list
             Expanded(
-              child: ListView.builder(
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  final item = items[index];
-                  final daysLeft = int.tryParse(item.exp.split(" ")[0]) ?? 0;
-                  final color = getCardColor(daysLeft);
+              child: StreamBuilder<List<FoodModel>>(
+                stream: FirestoreService().getFoods(user.uid),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    return Center(child: Text("Error: ${snapshot.error}"));
+                  }
 
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    decoration: BoxDecoration(
-                      color: color,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      title: Text(
-                        "Item name: ${item.name}",
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                  final allFoods = snapshot.data ?? [];
+                  
+                  // Filter by search text
+                  final filteredFoods = allFoods.where((food) {
+                    return food.name.toLowerCase().contains(_searchText);
+                  }).toList();
+                  // sort base on the expiration date
+                  filteredFoods.sort((a, b) => a.expirationDate.compareTo(b.expirationDate));
+
+                  if (filteredFoods.isEmpty) {
+                    return const Center(child: Text("No items found"));
+                  }
+
+                  return ListView.builder(
+                    itemCount: filteredFoods.length,
+                    itemBuilder: (context, index) {
+                      final item = filteredFoods[index];
+                      final percentage = calculatePercentage(item.createdAt.toDate(), item.expirationDate);
+                      final daysLeft = item.expirationDate.difference(DateTime.now()).inDays;
+                      final color = getCardColor(daysLeft);
+                      
+                      final daysLeftText = daysLeft < 0 
+                          ? "Expired ${daysLeft.abs()} days ago" 
+                          : (daysLeft == 0 ? "Expires Today" : "$daysLeft days left");
+
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        decoration: BoxDecoration(
+                          color: color,
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Amount: ${item.amount}",
-                              style: const TextStyle(color: Colors.black87)),
-                          Text("Brand: ${item.brand}",
-                              style: const TextStyle(color: Colors.black87)),
-                          Text("Expiring in: ${item.exp}",
-                              style: const TextStyle(color: Colors.black87)),
-                          if (item.notes.isNotEmpty) ...[
-                            const SizedBox(height: 4),
-                            Text("Notes: ${item.notes}",
-                                style: const TextStyle(color: Colors.black87)),
-                          ],
-                          const SizedBox(height: 6),
-                          LinearProgressIndicator(
-                            value: 1 - (daysLeft / 5),
-                            color: Colors.redAccent,
-                            backgroundColor: Colors.white,
-                            minHeight: 6,
-                            borderRadius: BorderRadius.circular(6),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          title: Text(
+                            "Item name: ${item.name}",
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
                           ),
-                        ],
-                      ),
-                      trailing: const Icon(Icons.delete, color: Colors.black87),
-                    ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Amount: ${item.amount} ${item.unit}",
+                                  style: const TextStyle(color: Colors.black87)),
+                              Text("Brand: ${item.brand}",
+                                  style: const TextStyle(color: Colors.black87)),
+                              Text("Status: $daysLeftText",
+                                  style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold)),
+                              if (item.notes.isNotEmpty) ...[
+                                const SizedBox(height: 4),
+                                Text("Notes: ${item.notes}",
+                                    style: const TextStyle(color: Colors.black87)),
+                              ],
+                              const SizedBox(height: 6),
+                              LinearProgressIndicator(
+                                value: percentage / 100,
+                                color: Colors.redAccent,
+                                backgroundColor: Colors.white.withOpacity(0.5),
+                                minHeight: 6,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                            ],
+                          ),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.black87),
+                            onPressed: () async {
+                               await FirestoreService().deleteFood(item.id);
+                            },
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
               ),

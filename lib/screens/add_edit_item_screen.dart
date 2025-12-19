@@ -24,12 +24,12 @@ class AddEditHomeScreen extends StatelessWidget {
             );
           },
         ),
-        // backgroundColor: Colors.white, // Removed
+        // bacgroundcolor adjusted for theme 
         elevation: 0,
         title: const Text(
           "Add / Edit Item",
           style: TextStyle(
-            // color: Colors.black, // Removed
+            // adjusted for theme
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -56,7 +56,7 @@ class AddEditHomeScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                // color: Colors.black, // Removed
+                // remove the black pls
               ),
             ),
             const SizedBox(height: 4),
