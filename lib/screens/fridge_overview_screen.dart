@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fridge_note/screens/add_edit_item_screen.dart';
 import 'detailed_category_screen.dart';
 import 'shopping_list.dart';
+import 'home_screen.dart';
 import '../models/food_model.dart';
 import '../services/firestore_services.dart';
 
@@ -28,6 +29,7 @@ class FridgeOverviewScreen extends StatelessWidget {
           IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
         ],
       ),
+
       body: StreamBuilder<List<FoodModel>>(
         stream: FirestoreService().getFoods(user.uid),
         builder: (context, snapshot) {
@@ -49,7 +51,20 @@ class FridgeOverviewScreen extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                TextButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HomeScreen()),
+                    );
+                  },
+                  label: const Text(
+                    "Back to Home Page",
+                    style: TextStyle(color: Colors.blue, fontSize: 14),
+                  ),
+                ),
                
               Expanded(
                 child: ListView(

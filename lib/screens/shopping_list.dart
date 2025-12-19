@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 // 4. SHOPPING LIST SCREEN
 // ==========================================
 class ShoppingListScreen extends StatefulWidget {
+  static const String routeName = '/shopping_list';
   const ShoppingListScreen({super.key});
 
   @override

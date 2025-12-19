@@ -17,10 +17,6 @@ class AddEditHomeScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.black),
-          onPressed: () {},
-        ),
         title: const Text(
           "Add / Edit Item",
           style: TextStyle(
@@ -45,12 +41,9 @@ class AddEditHomeScreen extends StatelessWidget {
             // back to fridgemain
             TextButton.icon(
               onPressed: () {
-                Navigator.pushAndRemoveUntil(
+                Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => FridgeOverviewScreen(),
-                  ),
-                      (route) => false,
+                  MaterialPageRoute(builder: (context) => const FridgeOverviewScreen()),
                 );
               },
               icon: const Icon(Icons.arrow_back, size: 18, color: Colors.blue),

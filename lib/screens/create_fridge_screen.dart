@@ -21,7 +21,7 @@ class _CreateFridgeScreenState extends State<CreateFridgeScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Fridge Created Successfully!')),
       );
-      Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+      Navigator.pop(context);
     } else {
       showDialog(
         context: context,
