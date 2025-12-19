@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../screens/about_screen.dart';
-import '../screens/create_fridge_screen.dart';
+import 'screens/about_screen.dart';
+import 'screens/create_fridge_screen.dart';
 import 'screens/login_page.dart';
 // Berkan
 import 'screens/home_screen.dart';           // Screen 3
