@@ -48,8 +48,8 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
           backgroundColor: AppColors.background,
         ),
         const SizedBox(height: 10),
-        Text('User Name', style: AppStyles.title),
-        Text('email@example.com', style: AppStyles.body),
+        Text('User Name', style: AppTextStyles.title),
+        Text('email@example.com', style: AppTextStyles.body),
       ],
     );
   }
@@ -62,7 +62,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
   }) {
     return ListTile(
       leading: icon != null ? Icon(icon, color: AppColors.primary) : null,
-      title: Text(title, style: AppStyles.body),
+      title: Text(title, style: AppTextStyles.body),
       trailing: trailing,
       onTap: onTap,
     );
@@ -98,7 +98,7 @@ class _SettingsProfileScreenState extends State<SettingsProfileScreen> {
           const Divider(),
 
           Text('Kaydedilen Buzdolapları',
-              style: AppStyles.title.copyWith(fontSize: 18)),
+              style: AppTextStyles.title.copyWith(fontSize: 18)),
           const SizedBox(height: 10),
 
           // Card & List ve Dinamik Kaldırma Gereksinimi

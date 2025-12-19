@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import '../utils/constants.dart'; 
-import 'create_fridge_screen.dart'; 
+import '../utils/constants.dart';
+import 'create_fridge_screen.dart';
 import 'fridge_overview_screen.dart';
+// 1. IMPORT THE SCREENS HERE
+import 'join_fridge_screen.dart';
+import 'settings_profile_screen.dart';
 
 class HomeScreen extends StatelessWidget {
-  
+
   static const String routeName = '/home_screen';
 
   const HomeScreen({super.key});
@@ -22,7 +25,8 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: () {
-              // Profil sayfasına git (İleride eklenecek)
+              // 2. NAVIGATE TO PROFILE SCREEN
+              Navigator.pushNamed(context, SettingsProfileScreen.routeName);
             },
           ),
         ],
@@ -32,7 +36,7 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
                 child: TextField(
@@ -52,11 +56,11 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-              
-         
+
               TextButton(
                 onPressed: () {
-                  // Join Screen'e git (İleride eklenecek)
+                  // 3. NAVIGATE TO JOIN FRIDGE SCREEN
+                  Navigator.pushNamed(context, JoinFridgeScreen.routeName);
                 },
                 child: const Text(
                   'Join via link',
@@ -67,17 +71,16 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 40),
 
-              // 3. "My Fridge"  -> Screen 6'ya 
+              // "My Fridge" Button
               ElevatedButton(
                 onPressed: () {
-                  // Screen 6: Fridge Overview sayfasına yönlendirir
                   Navigator.pushNamed(context, FridgeOverviewScreen.routeName);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor, // Constants'taki yeşil renk
+                  backgroundColor: AppColors.primaryColor,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                   padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                   elevation: 5,
@@ -90,10 +93,9 @@ class HomeScreen extends StatelessWidget {
 
               const SizedBox(height: 30),
 
-              // 4. "Create New" (+) Yuvarlak Buton -> Screen 4'e Gider
+              // "Create New" Button
               InkWell(
                 onTap: () {
-                  // Screen 4: goes Create Fridge 
                   Navigator.pushNamed(context, CreateFridgeScreen.routeName);
                 },
                 child: Container(
@@ -120,21 +122,24 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
-      
-      // 5. Alt Navigasyon Barı (Görsel Amaçlı)
+
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: AppColors.primaryColor,
         unselectedItemColor: Colors.grey,
         showSelectedLabels: false,
         showUnselectedLabels: false,
-        currentIndex: 1, // Home seçili dursun
+        currentIndex: 1,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Shop'),
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
         ],
         onTap: (index) {
-          
+          // 4. NAVIGATE VIA BOTTOM BAR (Optional)
+          if (index == 2) {
+            Navigator.pushNamed(context, SettingsProfileScreen.routeName);
+          }
+          // You can also add logic for index == 0 (Shop) here later
         },
       ),
     );

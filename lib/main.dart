@@ -13,7 +13,8 @@ import 'screens/add_item_screen.dart';
 import 'screens/edit_item_screen.dart';
 import 'screens/expiring_soon_screen.dart';
 import 'screens/add_edit_item_screen.dart';
-
+import 'screens/join_fridge_screen.dart';
+import 'screens/settings_profile_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -62,6 +63,10 @@ class MyApp extends StatelessWidget {
         EditItemScreen.routeName: (context) => const EditItemScreen(),
         ExpiringSoonScreen.routeName: (context) => const ExpiringSoonScreen(),
         AddEditHomeScreen.routeName: (context) => const AddEditHomeScreen(),
+
+        JoinFridgeScreen.routeName: (context) => const JoinFridgeScreen(),
+        SettingsProfileScreen.routeName: (context) => const SettingsProfileScreen(),
+
 
       },
     );

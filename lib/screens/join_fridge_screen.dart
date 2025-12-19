@@ -67,7 +67,7 @@ class _JoinFridgeScreenState extends State<JoinFridgeScreen> {
             children: <Widget>[
               Text(
                 'Katılım Kodu veya Bağlantısını Girin',
-                style: AppStyles.title.copyWith(fontSize: 18),
+                style: AppTextStyles.title.copyWith(fontSize: 18),
               ),
               const SizedBox(height: 20),
               TextFormField(
@@ -99,10 +99,10 @@ class _JoinFridgeScreenState extends State<JoinFridgeScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              Center(child: Text('veya', style: AppStyles.body)),
+              Center(child: Text('veya', style: AppTextStyles.body)),
               TextButton(
                 onPressed: () {},
-                child: Text('Yardım? Kod nasıl alınır?', style: AppStyles.link),
+                child: Text('Yardım? Kod nasıl alınır?', style: AppTextStyles.link),
               ),
             ],
           ),
