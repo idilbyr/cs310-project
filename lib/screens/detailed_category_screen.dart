@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../utils/item_data.dart';
+import '../models/food_model.dart';
 
 // ==========================================
 // 3. UPDATED CATEGORY DETAIL SCREEN
@@ -9,7 +9,7 @@ class CategoryDetailScreen extends StatelessWidget {
   final String categoryName;
   final Color themeColor;
   final String iconPath;
-  final List<FridgeItem> items;
+  final List<FoodModel> items;
 
   // New variables for manual control
   final Color customTextColor;
@@ -137,10 +137,12 @@ class CategoryDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTableItemCard(FridgeItem item) {
+  Widget _buildTableItemCard(FoodModel item) {
     final labelBg = themeColor.withOpacity(0.4);
     final valueBg = themeColor.withOpacity(0.15);
     final borderColor = themeColor;
+    
+    final formattedDate = "${item.expirationDate.day}/${item.expirationDate.month}/${item.expirationDate.year}";
 
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
@@ -151,9 +153,9 @@ class CategoryDetailScreen extends StatelessWidget {
       child: Column(
         children: [
           _buildTableRow("Name:", item.name, labelBg, valueBg, borderColor, isTop: true),
-          _buildTableRow("Amount:", item.amount, labelBg, valueBg, borderColor),
+          _buildTableRow("Amount:", "${item.amount} ${item.unit}", labelBg, valueBg, borderColor),
           _buildTableRow("Brand:", item.brand, labelBg, valueBg, borderColor),
-          _buildTableRow("EXP:", item.exp, labelBg, valueBg, borderColor),
+          _buildTableRow("EXP:", formattedDate, labelBg, valueBg, borderColor),
           _buildTableRow("Notes:", item.notes, labelBg, valueBg, borderColor, isBottom: true),
         ],
       ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../services/firestore_services.dart';
 
 class AddItemScreen extends StatefulWidget {
   static const routeName = '/add_item';
@@ -218,8 +220,43 @@ class _AddItemScreenState extends State<AddItemScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                onPressed: () {
-                  // Save işlemleri
+                onPressed: () async {
+                  if (nameController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Please enter a name')),
+                    );
+                    return;
+                  }
+                  
+                  final user = FirebaseAuth.instance.currentUser;
+                  if (user == null) {
+                     ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('You must be logged in')),
+                    );
+                    return;
+                  }
+
+                  try {
+                    await FirestoreService().addFood(
+                      name: nameController.text,
+                      category: selectedCategory,
+                      brand: brandController.text,
+                      amount: amount.toDouble(),
+                      unit: selectedUnit,
+                      notes: '', 
+                      expirationDate: selectedDate ?? DateTime.now().add(const Duration(days: 7)),
+                      userId: user.uid,
+                    );
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Error: $e')),
+                      );
+                    }
+                  }
                 },
                 child: const Text(
                   "Save Item",

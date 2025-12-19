@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "834527981472",
+    "project_id": "fridgenote-adb0e",
+    "storage_bucket": "fridgenote-adb0e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:834527981472:android:a31070b58f4fd7e08a7ec5",
+        "android_client_info": {
+          "package_name": "com.example.fridge_note"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqvJXjto3fFBdDyb2DmMVjo8qNf-wbM18"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
