@@ -13,7 +13,7 @@ class ShoppingListScreen extends StatefulWidget {
 }
 
 class _ShoppingListScreenState extends State<ShoppingListScreen> {
-  final List<String> items = ["Milk", "Chocolate", "Mushroom", "Orange", "Salmon"];
+  final List<String> items = [];
   final Set<String> checkedItems = {};
 
   void _onItemChecked(String item, bool? isChecked) {
@@ -40,9 +40,39 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
   }
 
   void _addItem() {
-    setState(() {
-      items.add("New Item ${items.length + 1}");
-    });
+    showDialog(
+      context: context,
+      builder: (context) {
+        String newItem = "";
+        return AlertDialog(
+          title: const Text("Add Item"),
+          content: TextField(
+            autofocus: true,
+            decoration: const InputDecoration(hintText: "Enter item name"),
+            onChanged: (value) {
+              newItem = value;
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                if (newItem.trim().isNotEmpty) {
+                  setState(() {
+                    items.add(newItem.trim());
+                  });
+                }
+                Navigator.pop(context);
+              },
+              child: const Text("Add"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -104,7 +134,7 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
                             style: TextStyle(
                               fontSize: 16,
                               decoration: isChecked ? TextDecoration.lineThrough : null,
-                              color: isChecked ? Colors.grey : Colors.black87,
+                              color: isChecked ? Colors.grey : Theme.of(context).textTheme.bodyLarge?.color,
                             ),
                           ),
                         ],
