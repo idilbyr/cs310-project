@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -40,47 +41,47 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBH72cM459rPAEdVaiK2V5F6Mu5yWUo54E',
-    appId: '1:834527981472:web:2d886acc227332388a7ec5',
-    messagingSenderId: '834527981472',
-    projectId: 'fridgenote-adb0e',
-    authDomain: 'fridgenote-adb0e.firebaseapp.com',
-    storageBucket: 'fridgenote-adb0e.firebasestorage.app',
+  static FirebaseOptions get web => FirebaseOptions(
+    apiKey: dotenv.env['WEB_API_KEY']!,
+    appId: dotenv.env['WEB_APP_ID']!,
+    messagingSenderId: dotenv.env['MESSAGING_SENDER_ID']!,
+    projectId: dotenv.env['PROJECT_ID']!,
+    authDomain: dotenv.env['AUTH_DOMAIN'],
+    storageBucket: dotenv.env['STORAGE_BUCKET'],
   );
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCqvJXjto3fFBdDyb2DmMVjo8qNf-wbM18',
-    appId: '1:834527981472:android:a31070b58f4fd7e08a7ec5',
-    messagingSenderId: '834527981472',
-    projectId: 'fridgenote-adb0e',
-    storageBucket: 'fridgenote-adb0e.firebasestorage.app',
+  static FirebaseOptions get android => FirebaseOptions(
+    apiKey: dotenv.env['ANDROID_API_KEY']!,
+    appId: dotenv.env['ANDROID_APP_ID']!,
+    messagingSenderId: dotenv.env['MESSAGING_SENDER_ID']!,
+    projectId: dotenv.env['PROJECT_ID']!,
+    storageBucket: dotenv.env['STORAGE_BUCKET'],
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBPEb-TLiUHdwq8gOCH9AUXa_pJZgsGWEw',
-    appId: '1:834527981472:ios:48d511470faf67228a7ec5',
-    messagingSenderId: '834527981472',
-    projectId: 'fridgenote-adb0e',
-    storageBucket: 'fridgenote-adb0e.firebasestorage.app',
-    iosBundleId: 'com.example.fridgeNote',
+  static FirebaseOptions get ios => FirebaseOptions(
+    apiKey: dotenv.env['IOS_API_KEY']!,
+    appId: dotenv.env['IOS_APP_ID']!,
+    messagingSenderId: dotenv.env['MESSAGING_SENDER_ID']!,
+    projectId: dotenv.env['PROJECT_ID']!,
+    storageBucket: dotenv.env['STORAGE_BUCKET'],
+    iosBundleId: dotenv.env['IOS_BUNDLE_ID'],
   );
 
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBPEb-TLiUHdwq8gOCH9AUXa_pJZgsGWEw',
-    appId: '1:834527981472:ios:48d511470faf67228a7ec5',
-    messagingSenderId: '834527981472',
-    projectId: 'fridgenote-adb0e',
-    storageBucket: 'fridgenote-adb0e.firebasestorage.app',
-    iosBundleId: 'com.example.fridgeNote',
+  static FirebaseOptions get macos => FirebaseOptions(
+    apiKey: dotenv.env['IOS_API_KEY']!,
+    appId: dotenv.env['IOS_APP_ID']!,
+    messagingSenderId: dotenv.env['MESSAGING_SENDER_ID']!,
+    projectId: dotenv.env['PROJECT_ID']!,
+    storageBucket: dotenv.env['STORAGE_BUCKET'],
+    iosBundleId: dotenv.env['IOS_BUNDLE_ID'],
   );
 
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyBH72cM459rPAEdVaiK2V5F6Mu5yWUo54E',
-    appId: '1:834527981472:web:71918afb0f0d84688a7ec5',
-    messagingSenderId: '834527981472',
-    projectId: 'fridgenote-adb0e',
-    authDomain: 'fridgenote-adb0e.firebaseapp.com',
-    storageBucket: 'fridgenote-adb0e.firebasestorage.app',
+  static FirebaseOptions get windows => FirebaseOptions(
+    apiKey: dotenv.env['WINDOWS_API_KEY']!,
+    appId: dotenv.env['WINDOWS_APP_ID']!,
+    messagingSenderId: dotenv.env['MESSAGING_SENDER_ID']!,
+    projectId: dotenv.env['PROJECT_ID']!,
+    authDomain: dotenv.env['AUTH_DOMAIN'],
+    storageBucket: dotenv.env['STORAGE_BUCKET'],
   );
 }
