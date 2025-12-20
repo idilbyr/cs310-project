@@ -12,7 +12,9 @@ import 'add_edit_item_screen.dart';
 
 class ExpiringSoonScreen extends StatefulWidget {
   static const routeName = '/expiring_soon';
-  const ExpiringSoonScreen({super.key});
+  final String? fridgeId;
+
+  const ExpiringSoonScreen({super.key, this.fridgeId});
 
   @override
   State<ExpiringSoonScreen> createState() => _ExpiringSoonScreenState();
@@ -80,7 +82,7 @@ class _ExpiringSoonScreenState extends State<ExpiringSoonScreen> {
             const SizedBox(height: 4),
 
             const Text(
-              "Fridge 1",
+              "Fridge Items",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),
@@ -125,7 +127,9 @@ class _ExpiringSoonScreenState extends State<ExpiringSoonScreen> {
             // item list
             Expanded(
               child: StreamBuilder<List<FoodModel>>(
-                stream: FirestoreService().getFoods(user.uid),
+                stream: widget.fridgeId != null
+                    ? FirestoreService().getFoodsForFridge(widget.fridgeId!)
+                    : FirestoreService().getFoods(user.uid),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());

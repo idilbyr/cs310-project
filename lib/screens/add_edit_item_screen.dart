@@ -1,114 +1,122 @@
 import 'package:flutter/material.dart';
-import 'package:fridge_note/screens/fridge_overview_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import 'add_item_screen.dart';
-import 'edit_item_screen.dart';
 import 'expiring_soon_screen.dart';
-import 'detailed_category_screen.dart';
-import '../main.dart';
+import '../services/firestore_services.dart';
+import '../models/food_model.dart';
+import 'fridge_overview_screen.dart';
+import '../providers/fridge_provider.dart';
 
 class AddEditHomeScreen extends StatelessWidget {
   static const routeName = '/add_edit_item';
+
+
   const AddEditHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    final fridgeProvider = Provider.of<FridgeProvider>(context);
+    final fridgeId = fridgeProvider.selectedFridge?.id;
+    final fridgeName = fridgeProvider.selectedFridge?.name ?? "My Fridge";
+
     return Scaffold(
-      // backgroundColor: Colors.white, // Removed
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const FridgeOverviewScreen()),
-            );
-          },
-        ),
-        // bacgroundcolor adjusted for theme 
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         elevation: 0,
         title: const Text(
           "Add / Edit Item",
-          style: TextStyle(
-            // adjusted for theme
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         actions: const [
           Padding(
             padding: EdgeInsets.only(right: 12),
-            child: Icon(Icons.account_circle, size: 28), // Removed color
+            child: Icon(Icons.account_circle, size: 28),
           ),
         ],
       ),
-
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
-            const SizedBox(height: 8),
-
-            // fridge title
-            const Text(
-              "Fridge 1",
-              style: TextStyle(
+            Text(
+              fridgeName,
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                // remove the black pls
+                color: Color(0xFF6750A4), // trying this purple color
               ),
             ),
             const SizedBox(height: 4),
 
-            // total items
-            const Text(
-              "Total Items:",
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
+            // Total Items count
+            StreamBuilder<List<FoodModel>>(
+              stream: fridgeId != null
+                  ? FirestoreService().getFoodsForFridge(fridgeId)
+                  : (user != null
+                  ? FirestoreService().getFoods(user.uid)
+                  : const Stream.empty()),
+              builder: (context, snapshot) {
+                final count = snapshot.data?.length ?? 0;
+                return Text(
+                  "Total Items: $count",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                  ),
+                );
+              },
             ),
+
             const SizedBox(height: 30),
 
-            // add item
+            // Add Item Button
             _buildMainButton(
               context,
               label: "Add Item",
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const AddItemScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => AddItemScreen(fridgeId: fridgeId),
+                  ),
                 );
               },
             ),
             const SizedBox(height: 20),
 
-            // edit item
+            // Edit Item Button
             _buildMainButton(
               context,
               label: "Edit Item",
               onTap: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Please select an item from the fridge list to edit.')),
-                );
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const FridgeOverviewScreen()),
-                  (route) => false,
+                  const SnackBar(
+                    content: Text('Please select an item from the fridge list to edit.'),
+                  ),
                 );
               },
             ),
             const SizedBox(height: 20),
 
-            // expring soon
+            // Expiring Soon Button
             _buildMainButton(
               context,
               label: "Expiring Soon List",
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const ExpiringSoonScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => ExpiringSoonScreen(fridgeId: fridgeId),
+                  ),
                 );
               },
             ),

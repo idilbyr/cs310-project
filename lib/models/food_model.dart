@@ -11,6 +11,7 @@ class FoodModel {
     final DateTime expirationDate;
     // setup requirements
     final String createdBy;
+    final String? fridgeId;
     final Timestamp createdAt;
 
     FoodModel({
@@ -23,6 +24,7 @@ class FoodModel {
         required this.notes,
         required this.expirationDate,
         required this.createdBy,
+        this.fridgeId,
         required this.createdAt,
     });
 
@@ -39,6 +41,7 @@ class FoodModel {
             notes: data['notes'] ?? '',
             expirationDate: (data['expirationDate'] as Timestamp).toDate(),
             createdBy: data['createdBy'] ?? '',
+            fridgeId: data['fridgeId'],
             createdAt: data['createdAt'] ?? Timestamp.now(),
         );
     }

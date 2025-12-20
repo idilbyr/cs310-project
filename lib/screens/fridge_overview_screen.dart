@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fridge_note/screens/add_edit_item_screen.dart';
+import 'package:provider/provider.dart';
+import 'add_edit_item_screen.dart';
 import 'detailed_category_screen.dart';
 import 'shopping_list.dart';
 import 'home_screen.dart';
 import '../models/food_model.dart';
+import '../models/fridge_model.dart';
 import '../services/firestore_services.dart';
+import '../providers/fridge_provider.dart';
 
 class FridgeOverviewScreen extends StatelessWidget {
   static const String routeName = '/fridge_overview';
+  final String? fridgeId;
 
-  const FridgeOverviewScreen({super.key});
+  const FridgeOverviewScreen({super.key, this.fridgeId});
 
   @override
   Widget build(BuildContext context) {
@@ -18,19 +22,58 @@ class FridgeOverviewScreen extends StatelessWidget {
     if (user == null) {
       return const Scaffold(body: Center(child: Text("Please log in")));
     }
+    final fridgeArg = ModalRoute.of(context)?.settings.arguments as FridgeModel?;
+    final fridgeProvider = Provider.of<FridgeProvider>(context);
+    final fridge = fridgeArg ?? fridgeProvider.selectedFridge;
+
+    if (fridge != null) {
+      // If we have a fridge  use it.
+      if (fridgeArg != null && fridgeProvider.selectedFridge?.id != fridgeArg.id) {
+         // NOTE: updating provider in build directly without listen is not working
+         WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (fridgeProvider.selectedFridge?.id != fridgeArg.id) {
+               Provider.of<FridgeProvider>(context, listen: false).selectFridge(fridgeArg);
+            }
+         });
+      }
+      return _buildContent(context, fridge, user!);
+    } else if (fridgeId != null) {
+      return FutureBuilder<FridgeModel?>(
+        future: FirestoreService().getFridge(fridgeId!),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Scaffold(
+                body: Center(child: CircularProgressIndicator()));
+          }
+          if (snapshot.hasData && snapshot.data != null) {
+             // Update provider with fetched fridge
+             WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (fridgeProvider.selectedFridge?.id != snapshot.data!.id) {
+                   Provider.of<FridgeProvider>(context, listen: false).selectFridge(snapshot.data!);
+                }
+             });
+             return _buildContent(context, snapshot.data, user!);
+          }
+          return _buildContent(context, null, user!);
+        },
+      );
+    } else {
+      return _buildContent(context, null, user!);
+    }
+  }
+
+  Widget _buildContent(BuildContext context, FridgeModel? fridge, User user) {
+    final fridgeName = fridge?.name ?? 'My Fridge';
 
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const HomeScreen()),
-            );
+            Navigator.pop(context);
           },
         ),
-        title: const Text('FRIDGE_1'), // Removed hardcoded style
+        title: Text(fridgeName), // Removed hardcoded style
         // backgroundColor removed to use theme color
         // iconTheme: const IconThemeData(color: Colors.black), // Removed (by idil)
         actions: [
@@ -40,7 +83,9 @@ class FridgeOverviewScreen extends StatelessWidget {
       ),
 
       body: StreamBuilder<List<FoodModel>>(
-        stream: FirestoreService().getFoods(user.uid),
+        stream: fridge != null
+            ? FirestoreService().getFoodsForFridge(fridge.id)
+            : FirestoreService().getFoods(user.uid),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -141,9 +186,15 @@ class FridgeOverviewScreen extends StatelessWidget {
                     const SizedBox(height: 10),
                     Center(
                         child: TextButton(
-                            onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => const AddEditHomeScreen()),);},
-                            child: const Text("Add / Edit Item", style: TextStyle(color: Colors.grey))
-                        )
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const AddEditHomeScreen()),
+                              );
+                            },
+                            child: const Text("Add / Edit Item",
+                                style: TextStyle(color: Colors.grey)))
                     ),
                   ],
                 ),

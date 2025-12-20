@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme__provider.dart';
+import '../providers/auth_providers.dart';
+import '../providers/fridge_provider.dart';
+import '../services/firestore_services.dart';
+import '../models/fridge_model.dart';
 import '../utils/constants.dart'; 
 import 'create_fridge_screen.dart'; 
 import 'fridge_overview_screen.dart';
@@ -15,6 +19,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<AuthProvider>(context).user;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -85,23 +90,49 @@ class HomeScreen extends StatelessWidget {
               
               const SizedBox(height: 40),
 
-              // 3. "My Fridge"  -> Screen 6'ya 
-              ElevatedButton(
-                onPressed: () {
-                  // Screen 6: Fridge Overview sayfasına yönlendirir
-                  Navigator.pushNamed(context, FridgeOverviewScreen.routeName);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor, // Constants'taki yeşil renk
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                  elevation: 5,
-                ),
-                child: const Text(
-                  'My Fridge',
-                  style: TextStyle(fontSize: 22, color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ),
+              if (user != null)
+                StreamBuilder<List<FridgeModel>>(
+                  stream: FirestoreService().getFridges(user.uid),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    }
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    }
+                    final fridges = snapshot.data ?? [];
+
+                    if (fridges.isEmpty) {
+                      return const Text('No fridges found. Create one!');
+                    }
+
+                    return Column(
+                      children: fridges.map((fridge) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Provider.of<FridgeProvider>(context, listen: false).selectFridge(fridge);
+                              Navigator.pushNamed(context, FridgeOverviewScreen.routeName, arguments: fridge);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryColor,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                              elevation: 5,
+                            ),
+                            child: Text(
+                              fridge.name,
+                              style: const TextStyle(fontSize: 22, color: Colors.white, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  },
+                )
+              else
+                 const Text('Please log in to see your fridges'),
 
               const SizedBox(height: 30),
 

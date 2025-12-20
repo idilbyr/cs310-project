@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/food_model.dart';
+import '../models/fridge_model.dart';
 
 class FirestoreService{
     final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -8,6 +9,20 @@ class FirestoreService{
         .orderBy('expirationDate',descending: false) // soonest expiration first
         .snapshots().map((snapshot) => snapshot.docs.map((doc) => FoodModel.fromSnapshot(doc)).toList());
     }
+
+    Stream<List<FoodModel>> getFoodsForFridge(String fridgeId) {
+      return _db
+          .collection('foods')
+          .where('fridgeId', isEqualTo: fridgeId)
+          .snapshots()
+          .map((snapshot) {
+        final foods =
+            snapshot.docs.map((doc) => FoodModel.fromSnapshot(doc)).toList();
+        foods.sort((a, b) => a.expirationDate.compareTo(b.expirationDate));
+        return foods;
+      });
+    }
+
     Future<void> addFood({required String name,
         required String category,
         required String brand,
@@ -15,7 +30,9 @@ class FirestoreService{
         required String unit,
         required String notes,
         required DateTime expirationDate,
-        required String userId,}) async{
+        required String userId,
+        String? fridgeId,
+        }) async{
         await _db.collection('foods').add({
             'name': name,
             'category': category,
@@ -25,6 +42,7 @@ class FirestoreService{
             'notes': notes,
             'expirationDate': Timestamp.fromDate(expirationDate),
             'createdBy': userId,
+            'fridgeId': fridgeId,
             'createdAt': FieldValue.serverTimestamp(),
         });  
     }
@@ -57,5 +75,43 @@ class FirestoreService{
 
     Future<void> deleteFood(String docId) async {
         await _db.collection('foods').doc(docId).delete();
+    }
+
+    // Fridge Methods
+    Future<void> createFridge({
+      required String name,
+      required String description,
+      required String icon,
+      required String userId,
+    }) async {
+      await _db.collection('fridges').add({
+        'name': name,
+        'description': description,
+        'icon': icon,
+        'createdBy': userId,
+        'members': [userId],
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    }
+
+    Stream<List<FridgeModel>> getFridges(String userId) {
+      return _db
+          .collection('fridges')
+          .where('members', arrayContains: userId)
+          .snapshots()
+          .map((snapshot) {
+        final fridges =
+            snapshot.docs.map((doc) => FridgeModel.fromSnapshot(doc)).toList();
+        fridges.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        return fridges;
+      });
+    }
+
+    Future<FridgeModel?> getFridge(String fridgeId) async {
+      final doc = await _db.collection('fridges').doc(fridgeId).get();
+      if (doc.exists) {
+        return FridgeModel.fromSnapshot(doc);
+      }
+      return null;
     }
 }

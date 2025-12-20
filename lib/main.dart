@@ -5,6 +5,7 @@ import 'firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'providers/theme__provider.dart';
 import 'providers/auth_providers.dart';
+import 'providers/fridge_provider.dart';
 import 'screens/about_screen.dart';
 import 'screens/create_fridge_screen.dart';
 import 'screens/login_page.dart';
@@ -32,6 +33,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => FridgeProvider()),
       ],
       child: const MyApp(),
     ),

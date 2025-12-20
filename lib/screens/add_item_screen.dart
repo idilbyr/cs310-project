@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../services/firestore_services.dart';
+import 'package:provider/provider.dart';
+import '../providers/fridge_provider.dart';
 
 class AddItemScreen extends StatefulWidget {
   static const routeName = '/add_item';
-  const AddItemScreen({super.key});
+  final String? fridgeId;
+
+  const AddItemScreen({super.key, this.fridgeId});
 
   @override
   State<AddItemScreen> createState() => _AddItemScreenState();
@@ -37,6 +41,10 @@ class _AddItemScreenState extends State<AddItemScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final fridgeProvider = Provider.of<FridgeProvider>(context);
+    final effectiveFridgeId = widget.fridgeId ?? fridgeProvider.selectedFridge?.id;
+    final fridgeName = fridgeProvider.selectedFridge?.name ?? "My Fridge";
+
     return Scaffold(
       // backgroundColor removed to use theme color
       appBar: AppBar(
@@ -66,8 +74,8 @@ class _AddItemScreenState extends State<AddItemScreen> {
 
             const SizedBox(height: 8),
 
-            const Text(
-              "Fridge 1",
+            Text(
+              fridgeName,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -90,7 +98,6 @@ class _AddItemScreenState extends State<AddItemScreen> {
                 DropdownMenuItem(value: 'Fish', child: Text('Fish')),
                 DropdownMenuItem(value: 'Dairy', child: Text('Dairy')),
                 DropdownMenuItem(value: 'Fruit', child: Text('Fruit')),
-                DropdownMenuItem(value: 'Other', child: Text('Other')),
               ],
               onChanged: (value) {
                 if (value != null) setState(() => selectedCategory = value);
@@ -246,6 +253,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                       notes: notesController.text.trim(), 
                       expirationDate: selectedDate ?? DateTime.now().add(const Duration(days: 7)),
                       userId: user.uid,
+                      fridgeId: widget.fridgeId,
                     );
                     if (context.mounted) {
                       Navigator.pop(context);

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth_providers.dart';
+import '../services/firestore_services.dart';
 import '../utils/constants.dart';
 
 class CreateFridgeScreen extends StatefulWidget {
@@ -15,13 +17,47 @@ class _CreateFridgeScreenState extends State<CreateFridgeScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
   String _selectedIcon = 'Default';
+  bool _isLoading = false;
 
-  void _submitForm() {
+  Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Fridge Created Successfully!')),
-      );
-      Navigator.pop(context);
+      setState(() {
+        _isLoading = true;
+      });
+
+      try {
+        final user = Provider.of<AuthProvider>(context, listen: false).user;
+        if (user != null) {
+          await FirestoreService().createFridge(
+            name: _nameController.text,
+            description: _descController.text,
+            icon: _selectedIcon,
+            userId: user.uid,
+          );
+
+          if (!mounted) return;
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Fridge Created Successfully!')),
+          );
+          Navigator.pop(context);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Error: User not logged in')),
+          );
+        }
+      } catch (e) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error creating fridge: $e')),
+        );
+      } finally {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      }
     } else {
       showDialog(
         context: context,
@@ -72,9 +108,11 @@ class _CreateFridgeScreenState extends State<CreateFridgeScreen> {
               ),
               const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: _submitForm,
+                onPressed: _isLoading ? null : _submitForm,
                 style: ElevatedButton.styleFrom(backgroundColor: AppColors.primaryColor, padding: const EdgeInsets.symmetric(vertical: 16)),
-                child: const Text('Create Fridge', style: AppTextStyles.buttonText),
+                child: _isLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text('Create Fridge', style: AppTextStyles.buttonText),
               ),
             ],
           ),
