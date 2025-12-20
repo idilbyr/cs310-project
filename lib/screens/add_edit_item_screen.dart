@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'add_item_screen.dart';
 import 'expiring_soon_screen.dart';
+import 'edit_item_screen.dart';
 import '../services/firestore_services.dart';
 import '../models/food_model.dart';
 import 'fridge_overview_screen.dart';
@@ -98,9 +99,10 @@ class AddEditHomeScreen extends StatelessWidget {
               context,
               label: "Edit Item",
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Please select an item from the fridge list to edit.'),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditItemScreen(fridgeId: fridgeId),
                   ),
                 );
               },

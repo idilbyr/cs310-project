@@ -163,21 +163,6 @@ class CategoryDetailScreen extends StatelessWidget {
             ],
           ),
         ),
-        Positioned(
-          top: 5,
-          right: 5,
-          child: IconButton(
-            icon: const Icon(Icons.edit, color: Colors.black54),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditItemScreen(food: item),
-                ),
-              );
-            },
-          ),
-        ),
       ],
     );
   }

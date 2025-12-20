@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../models/food_model.dart';
 import '../services/firestore_services.dart';
 
 class EditItemScreen extends StatefulWidget {
   static const routeName = '/edit_item';
-  final FoodModel food;
+  final FoodModel? food;
+  final String? fridgeId;
 
-  const EditItemScreen({super.key, required this.food});
+  const EditItemScreen({super.key, this.food, this.fridgeId});
 
   @override
   State<EditItemScreen> createState() => _EditItemScreenState();
 }
 
 class _EditItemScreenState extends State<EditItemScreen> {
+  // Edit Mode Variables
   late String selectedCategory;
   late String selectedUnit;
   late double amount;
@@ -22,16 +25,25 @@ class _EditItemScreenState extends State<EditItemScreen> {
   final TextEditingController brandController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
 
+  // Selection Mode Variables
+  String _searchText = "";
+
   @override
   void initState() {
     super.initState();
-    selectedCategory = widget.food.category;
-    selectedUnit = widget.food.unit;
-    amount = widget.food.amount;
-    selectedDate = widget.food.expirationDate;
-    nameController.text = widget.food.name;
-    brandController.text = widget.food.brand;
-    notesController.text = widget.food.notes;
+    if (widget.food != null) {
+      _initializeEditMode(widget.food!);
+    }
+  }
+
+  void _initializeEditMode(FoodModel food) {
+    selectedCategory = food.category;
+    selectedUnit = food.unit;
+    amount = food.amount;
+    selectedDate = food.expirationDate;
+    nameController.text = food.name;
+    brandController.text = food.brand;
+    notesController.text = food.notes;
   }
 
   Future<void> _pickDate() async {
@@ -50,9 +62,10 @@ class _EditItemScreenState extends State<EditItemScreen> {
   }
 
   Future<void> _saveItem() async {
+    if (widget.food == null) return;
     try {
       await FirestoreService().updateFood(
-        docId: widget.food.id,
+        docId: widget.food!.id,
         name: nameController.text.trim(),
         category: selectedCategory,
         brand: brandController.text.trim(),
@@ -78,6 +91,134 @@ class _EditItemScreenState extends State<EditItemScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // If no food is provided, show selection list
+    if (widget.food == null) {
+      return _buildSelectionView();
+    }
+
+    // If food is provided, show edit form
+    return _buildEditView();
+  }
+
+  Widget _buildSelectionView() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return const Scaffold(body: Center(child: Text("Please log in")));
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Select Item to Edit"),
+        elevation: 0,
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: "Search items...",
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _searchText = value.toLowerCase();
+                });
+              },
+            ),
+          ),
+          Expanded(
+            child: StreamBuilder<List<FoodModel>>(
+              stream: widget.fridgeId != null
+                  ? FirestoreService().getFoodsForFridge(widget.fridgeId!)
+                  : FirestoreService().getFoods(user.uid),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasError) {
+                  return Center(child: Text("Error: ${snapshot.error}"));
+                }
+
+                final allFoods = snapshot.data ?? [];
+                final filteredFoods = allFoods.where((food) {
+                  return food.name.toLowerCase().contains(_searchText);
+                }).toList();
+
+                if (filteredFoods.isEmpty) {
+                  return const Center(child: Text("No items found"));
+                }
+
+                return ListView.builder(
+                  itemCount: filteredFoods.length,
+                  itemBuilder: (context, index) {
+                    final food = filteredFoods[index];
+                    return Card(
+                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: _getCategoryColor(food.category),
+                          child: _getCategoryIcon(food.category),
+                        ),
+                        title: Text(food.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                        subtitle: Text("${food.amount} ${food.unit} • ${food.category}"),
+                        trailing: const Icon(Icons.edit, color: Colors.grey),
+                        onTap: () {
+                          // Navigate to same screen but with food item
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditItemScreen(food: food),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Color _getCategoryColor(String category) {
+    switch (category) {
+      case 'Vegetables': return const Color(0xFF2E7D32).withOpacity(0.2);
+      case 'Meat': return const Color(0xFFC62828).withOpacity(0.2);
+      case 'Fish': return const Color(0xFF1565C0).withOpacity(0.2);
+      case 'Dairy': return const Color(0xFFF9A825).withOpacity(0.2);
+      case 'Fruits': return const Color(0xFFEF6C00).withOpacity(0.2);
+      default: return Colors.grey.shade200;
+    }
+  }
+
+  Widget _getCategoryIcon(String category) {
+    String assetPath;
+    switch (category) {
+      case 'Vegetables': assetPath = "assets/images/veg.png"; break;
+      case 'Meat': assetPath = "assets/images/meat.png"; break;
+      case 'Fish': assetPath = "assets/images/fish.png"; break;
+      case 'Dairy': assetPath = "assets/images/dairy.png"; break;
+      case 'Fruits': assetPath = "assets/images/fruit.png"; break;
+      default: return const Icon(Icons.fastfood, color: Colors.grey);
+    }
+
+    return Image.asset(
+      assetPath,
+      width: 24,
+      height: 24,
+      fit: BoxFit.contain,
+      errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported, color: Colors.grey),
+    );
+  }
+
+  Widget _buildEditView() {
     return Scaffold(
       // backgroundColor: Colors.white, // Removed
       appBar: AppBar(

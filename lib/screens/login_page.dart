@@ -68,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('APPNAME', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+                  const Text('WELCOME TO FRIDGENOTE', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 16),
                   const Text('Login', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
                   const SizedBox(height: 48),
