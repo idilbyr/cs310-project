@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/food_model.dart';
 import '../models/fridge_model.dart';
+import '../models/shopping_item_model.dart';
 
 class FirestoreService{
     final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -113,5 +114,51 @@ class FirestoreService{
         return FridgeModel.fromSnapshot(doc);
       }
       return null;
+    }
+
+    // Shopping List Methods
+    Stream<List<ShoppingItemModel>> getShoppingList(String userId, {String? fridgeId}) {
+      Query query = _db.collection('shopping_list');
+      
+      if (fridgeId != null) {
+        query = query.where('fridgeId', isEqualTo: fridgeId);
+      } else {
+        query = query.where('createdBy', isEqualTo: userId).where('fridgeId', isNull: true);
+      }
+
+      return query.snapshots().map((snapshot) =>
+          snapshot.docs.map((doc) => ShoppingItemModel.fromSnapshot(doc)).toList());
+    }
+
+    Future<void> addShoppingItem(String name, String userId, {String? fridgeId}) async {
+      await _db.collection('shopping_list').add({
+        'name': name,
+        'isChecked': false,
+        'createdBy': userId,
+        'fridgeId': fridgeId,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    }
+
+    Future<void> toggleShoppingItem(String docId, bool isChecked) async {
+      await _db.collection('shopping_list').doc(docId).update({'isChecked': isChecked});
+    }
+
+    Future<void> deleteShoppingItem(String docId) async {
+      await _db.collection('shopping_list').doc(docId).delete();
+    }
+
+    Future<void> clearShoppingList(String userId, {String? fridgeId}) async {
+      Query query = _db.collection('shopping_list');
+      if (fridgeId != null) {
+        query = query.where('fridgeId', isEqualTo: fridgeId);
+      } else {
+        query = query.where('createdBy', isEqualTo: userId).where('fridgeId', isNull: true);
+      }
+      
+      final snapshot = await query.get();
+      for (final doc in snapshot.docs) {
+        await doc.reference.delete();
+      }
     }
 }

@@ -1,42 +1,44 @@
 
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../services/firestore_services.dart';
+import '../models/shopping_item_model.dart';
 
 // ==========================================
 // 4. SHOPPING LIST SCREEN
 // ==========================================
 class ShoppingListScreen extends StatefulWidget {
   static const String routeName = '/shopping_list';
-  const ShoppingListScreen({super.key});
+  final String? fridgeId;
+  
+  const ShoppingListScreen({super.key, this.fridgeId});
 
   @override
   State<ShoppingListScreen> createState() => _ShoppingListScreenState();
 }
 
 class _ShoppingListScreenState extends State<ShoppingListScreen> {
-  final List<String> items = [];
-  final Set<String> checkedItems = {};
+  final FirestoreService _firestoreService = FirestoreService();
+  User? get currentUser => FirebaseAuth.instance.currentUser;
 
-  void _onItemChecked(String item, bool? isChecked) {
+  void _onItemChecked(ShoppingItemModel item, bool? isChecked) {
+    if (currentUser == null) return;
+
     if (isChecked == true) {
-      setState(() {
-        checkedItems.add(item);
-      });
+      _firestoreService.toggleShoppingItem(item.id, true);
       Future.delayed(const Duration(milliseconds: 500), () {
         if (mounted) {
-          setState(() {
-            items.remove(item);
-            checkedItems.remove(item);
-          });
+          _firestoreService.deleteShoppingItem(item.id);
         }
       });
+    } else {
+      _firestoreService.toggleShoppingItem(item.id, false);
     }
   }
 
   void _clearAll() {
-    setState(() {
-      items.clear();
-      checkedItems.clear();
-    });
+    if (currentUser == null) return;
+    _firestoreService.clearShoppingList(currentUser!.uid, fridgeId: widget.fridgeId);
   }
 
   void _addItem() {
@@ -60,10 +62,12 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
             ),
             TextButton(
               onPressed: () {
-                if (newItem.trim().isNotEmpty) {
-                  setState(() {
-                    items.add(newItem.trim());
-                  });
+                if (newItem.trim().isNotEmpty && currentUser != null) {
+                  _firestoreService.addShoppingItem(
+                    newItem.trim(), 
+                    currentUser!.uid,
+                    fridgeId: widget.fridgeId
+                  );
                 }
                 Navigator.pop(context);
               },
@@ -78,6 +82,13 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
   @override
   Widget build(BuildContext context) {
     const purpleTheme = Color(0xFF7E57C2);
+    final user = currentUser;
+
+    if (user == null) {
+      return const Scaffold(
+        body: Center(child: Text("Please login to view shopping list")),
+      );
+    }
 
     return Scaffold(
       // backgroundColor removed
@@ -108,37 +119,55 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
               ),
               const SizedBox(height: 30),
               Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.only(left: 20, right: 20, bottom: 100),
-                  itemCount: items.length,
-                  itemBuilder: (context, index) {
-                    final item = items[index];
-                    final isChecked = checkedItems.contains(item);
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 15),
-                      child: Row(
-                        children: [
-                          Transform.scale(
-                            scale: 1.3,
-                            child: Checkbox(
-                              value: isChecked,
-                              activeColor: purpleTheme,
-                              side: const BorderSide(color: purpleTheme, width: 1.5),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                              onChanged: (val) => _onItemChecked(item, val),
-                            ),
+                child: StreamBuilder<List<ShoppingItemModel>>(
+                  stream: _firestoreService.getShoppingList(user.uid, fridgeId: widget.fridgeId),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    }
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    final items = snapshot.data ?? [];
+
+                    if (items.isEmpty) {
+                      return const Center(child: Text("No items in shopping list"));
+                    }
+
+                    return ListView.builder(
+                      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 100),
+                      itemCount: items.length,
+                      itemBuilder: (context, index) {
+                        final item = items[index];
+                        final isChecked = item.isChecked;
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 15),
+                          child: Row(
+                            children: [
+                              Transform.scale(
+                                scale: 1.3,
+                                child: Checkbox(
+                                  value: isChecked,
+                                  activeColor: purpleTheme,
+                                  side: const BorderSide(color: purpleTheme, width: 1.5),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                                  onChanged: (val) => _onItemChecked(item, val),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                item.name,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  decoration: isChecked ? TextDecoration.lineThrough : null,
+                                  color: isChecked ? Colors.grey : Theme.of(context).textTheme.bodyLarge?.color,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 8),
-                          Text(
-                            item,
-                            style: TextStyle(
-                              fontSize: 16,
-                              decoration: isChecked ? TextDecoration.lineThrough : null,
-                              color: isChecked ? Colors.grey : Theme.of(context).textTheme.bodyLarge?.color,
-                            ),
-                          ),
-                        ],
-                      ),
+                        );
+                      },
                     );
                   },
                 ),
@@ -186,3 +215,4 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
     );
   }
 }
+

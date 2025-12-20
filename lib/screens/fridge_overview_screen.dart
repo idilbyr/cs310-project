@@ -173,7 +173,7 @@ class FridgeOverviewScreen extends StatelessWidget {
                         onPressed: () {
                           Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const ShoppingListScreen())
+                              MaterialPageRoute(builder: (context) => ShoppingListScreen(fridgeId: fridge?.id))
                           );
                         },
                         child: const Text(

@@ -54,10 +54,7 @@ class _ExpiringSoonScreenState extends State<ExpiringSoonScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back), // Changed to arrow_back
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const AddEditHomeScreen()),
-            );
+            Navigator.pop(context);
           },
         ),
         title: const Text(

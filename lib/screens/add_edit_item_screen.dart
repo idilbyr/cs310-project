@@ -26,7 +26,7 @@ class AddEditHomeScreen extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pop(context);
+                Navigator.pop(context);
             },
           ),
         elevation: 0,
