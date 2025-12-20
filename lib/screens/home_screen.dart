@@ -180,7 +180,14 @@ class HomeScreen extends StatelessWidget {
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
         ],
         onTap: (index) {
-        if (index == 2) {
+          if (index == 0) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Coming Soon!'),
+                duration: Duration(seconds: 1),
+              ),
+            );
+          } else if (index == 2) {
             Navigator.pushNamed(context, AboutScreen.routeName);
           }
         },
