@@ -6,7 +6,6 @@ import 'expiring_soon_screen.dart';
 import 'edit_item_screen.dart';
 import '../services/firestore_services.dart';
 import '../models/food_model.dart';
-import 'fridge_overview_screen.dart';
 import '../providers/fridge_provider.dart';
 
 class AddEditHomeScreen extends StatelessWidget {

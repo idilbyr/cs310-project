@@ -189,11 +189,11 @@ class _EditItemScreenState extends State<EditItemScreen> {
 
   Color _getCategoryColor(String category) {
     switch (category) {
-      case 'Vegetables': return const Color(0xFF2E7D32).withOpacity(0.2);
-      case 'Meat': return const Color(0xFFC62828).withOpacity(0.2);
-      case 'Fish': return const Color(0xFF1565C0).withOpacity(0.2);
-      case 'Dairy': return const Color(0xFFF9A825).withOpacity(0.2);
-      case 'Fruits': return const Color(0xFFEF6C00).withOpacity(0.2);
+      case 'Vegetables': return const Color(0xFF2E7D32).withValues(alpha:0.2);
+      case 'Meat': return const Color(0xFFC62828).withValues(alpha:0.2);
+      case 'Fish': return const Color(0xFF1565C0).withValues(alpha:0.2);
+      case 'Dairy': return const Color(0xFFF9A825).withValues(alpha:0.2);
+      case 'Fruits': return const Color(0xFFEF6C00).withValues(alpha:0.2);
       default: return Colors.grey.shade200;
     }
   }

@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'add_edit_item_screen.dart';
 import 'detailed_category_screen.dart';
 import 'shopping_list.dart';
-import 'home_screen.dart';
 import '../models/food_model.dart';
 import '../models/fridge_model.dart';
 import '../services/firestore_services.dart';
@@ -36,7 +35,7 @@ class FridgeOverviewScreen extends StatelessWidget {
             }
          });
       }
-      return _buildContent(context, fridge, user!);
+      return _buildContent(context, fridge, user);
     } else if (fridgeId != null) {
       return FutureBuilder<FridgeModel?>(
         future: FirestoreService().getFridge(fridgeId!),
@@ -52,13 +51,13 @@ class FridgeOverviewScreen extends StatelessWidget {
                    Provider.of<FridgeProvider>(context, listen: false).selectFridge(snapshot.data!);
                 }
              });
-             return _buildContent(context, snapshot.data, user!);
+             return _buildContent(context, snapshot.data, user);
           }
-          return _buildContent(context, null, user!);
+          return _buildContent(context, null, user);
         },
       );
     } else {
-      return _buildContent(context, null, user!);
+      return _buildContent(context, null, user);
     }
   }
 
@@ -236,7 +235,7 @@ class FridgeOverviewScreen extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 12),
         height: 100,
         decoration: BoxDecoration(
-          color: color.withOpacity(0.15),
+          color: color.withValues(alpha:0.15),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: color, width: 2),
         ),

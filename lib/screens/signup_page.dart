@@ -42,6 +42,7 @@ class _SignUpPageState extends State<SignUpPage> {
       String? error = await authProvider.signUp(
         _emailController.text.trim(),
         _passwordController.text,
+        _usernameController.text,
       );
 
       setState(() => _isLoading = false);
@@ -82,7 +83,7 @@ class _SignUpPageState extends State<SignUpPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('APPNAME', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+                  const Text('FRIDGENOTE', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 16),
                   const Text('sign up', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
                   const SizedBox(height: 48),

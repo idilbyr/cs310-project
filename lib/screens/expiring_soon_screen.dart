@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/food_model.dart';
 import '../services/firestore_services.dart';
-import 'add_edit_item_screen.dart';
 //NOTE: since the calculation of the color base on time, i am changing the logichere.
 // Now the colors are base on certain day ranges than percentages
 // 0-3 days -> red
@@ -104,7 +103,7 @@ class _ExpiringSoonScreenState extends State<ExpiringSoonScreen> {
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.search, color: Theme.of(context).iconTheme.color),
                   hintText: "Search for items",
-                  hintStyle: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6)),
+                  hintStyle: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha:0.6)),
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.symmetric(vertical: 14),
                 ),
@@ -193,7 +192,7 @@ class _ExpiringSoonScreenState extends State<ExpiringSoonScreen> {
                               LinearProgressIndicator(
                                 value: percentage / 100,
                                 color: Colors.redAccent,
-                                backgroundColor: Colors.white.withOpacity(0.5),
+                                backgroundColor: Colors.white.withValues(alpha:0.5),
                                 minHeight: 6,
                                 borderRadius: BorderRadius.circular(6),
                               ),

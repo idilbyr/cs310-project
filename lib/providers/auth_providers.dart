@@ -15,9 +15,13 @@ class AuthProvider with ChangeNotifier {
     });
   }
 
-  Future<String?> signUp(String email, String password) async {
+  Future<String?> signUp(String email, String password, String username) async {
     try {
-      await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      await userCredential.user?.updateDisplayName(username);
+      await userCredential.user?.reload();
+      _user = _auth.currentUser;
+      notifyListeners();
       return null;
     } on FirebaseAuthException catch (e) {
       return e.message;
@@ -53,5 +57,11 @@ class AuthProvider with ChangeNotifier {
       debugPrint('Error resetting password: $e');
       return 'An unknown error occurred';
     }
+  }
+
+  Future<void> reloadUser() async {
+    await _user?.reload();
+    _user = _auth.currentUser;
+    notifyListeners();
   }
 }

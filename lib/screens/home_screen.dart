@@ -8,14 +8,27 @@ import '../models/fridge_model.dart';
 import '../utils/constants.dart'; 
 import 'create_fridge_screen.dart'; 
 import 'fridge_overview_screen.dart';
-import 'shopping_list.dart';
 import 'about_screen.dart';
+import 'user_settings_screen.dart';
 
-class HomeScreen extends StatelessWidget {
-  
+class HomeScreen extends StatefulWidget {
   static const String routeName = '/home_screen';
 
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +38,7 @@ class HomeScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
         title: Text('FridgeNote', style: AppTextStyles.headerStyle.copyWith(color: Theme.of(context).textTheme.titleLarge?.color)),
         centerTitle: true,
-        // backgroundColor: Colors.white, // Removed
         elevation: 0,
-        // iconTheme: const IconThemeData(color: AppColors.textColor), // Removed
         actions: [
           Consumer<ThemeProvider>(
             builder: (context, themeProvider, child) {
@@ -42,7 +53,7 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: () {
-              // Profil sayfasına git (İleride eklenecek)
+              Navigator.pushNamed(context, UserSettingsScreen.routeName);
             },
           ),
         ],
@@ -56,6 +67,12 @@ class HomeScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
                 child: TextField(
+                  controller: _searchController,
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value.toLowerCase();
+                    });
+                  },
                   decoration: InputDecoration(
                     hintText: 'Search fridge...',
                     prefixIcon: const Icon(Icons.search, color: AppColors.primaryColor),
@@ -76,14 +93,19 @@ class HomeScreen extends StatelessWidget {
          
               TextButton(
                 onPressed: () {
-                  // Join Screen'e git (İleride eklenecek)
+                  ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Coming Soon!'),
+                    duration: Duration(seconds: 1),
+                  ),
+                  );
                 },
                 child: Text(
                   'Join via link',
                   style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    color: Theme.of(context).brightness == Brightness.dark ? Colors.white : AppColors.textColor,
-                    fontSize: 16,
+                  decoration: TextDecoration.underline,
+                  color: Theme.of(context).brightness == Brightness.dark ? Colors.white : AppColors.textColor,
+                  fontSize: 16,
                   ),
                 ),
               ),
@@ -101,13 +123,20 @@ class HomeScreen extends StatelessWidget {
                       return Text('Error: ${snapshot.error}');
                     }
                     final fridges = snapshot.data ?? [];
+                    
+                    final filteredFridges = fridges.where((fridge) {
+                      return fridge.name.toLowerCase().contains(_searchQuery);
+                    }).toList();
 
-                    if (fridges.isEmpty) {
+                    if (filteredFridges.isEmpty) {
+                      if (_searchQuery.isNotEmpty) {
+                         return const Text('No fridges found matching your search.');
+                      }
                       return const Text('No fridges found. Create one!');
                     }
 
                     return Column(
-                      children: fridges.map((fridge) {
+                      children: filteredFridges.map((fridge) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: ElevatedButton(
@@ -150,7 +179,7 @@ class HomeScreen extends StatelessWidget {
                     border: Border.all(color: AppColors.primaryColor, width: 2),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.3),
+                        color: Colors.grey.withValues(alpha:0.3),
                         spreadRadius: 2,
                         blurRadius: 5,
                         offset: const Offset(0, 3),

@@ -10,13 +10,14 @@ class AboutScreen extends StatefulWidget {
 }
 
 class _AboutScreenState extends State<AboutScreen> {
-  final List<String> _teamMembers = ['Ali (Developer)', 'T (Teammate)', 'İ (Teammate)', 'Zeynep (Product Owner)'];
-
-  void _removeMember(int index) {
-    setState(() {
-      _teamMembers.removeAt(index);
-    });
-  }
+  final List<String> _teamMembers = [
+    'Idil BAYAR / 32267',
+    'Taha Yuşa BAYRAKTAR / 32398',
+    'Furkan ÇETIN / 32384',
+    'Berkan ÇETIN / 32055',
+    'Semih KAŞ / 22575',
+    'Alp Mert EKŞI / 32119'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,7 @@ class _AboutScreenState extends State<AboutScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              Center(child: Text('FridgeMaster v1.0', style: AppTextStyles.headerStyle.copyWith(color: Theme.of(context).textTheme.titleLarge?.color))),
+              Center(child: Text('FridgeNote v0.4', style: AppTextStyles.headerStyle.copyWith(color: Theme.of(context).textTheme.titleLarge?.color))),
               const Divider(),
               const Text('How to Use:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
               const SizedBox(height: 8),
@@ -53,7 +54,7 @@ class _AboutScreenState extends State<AboutScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              const Text('Team Members (Swipe/Click to remove):', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+              const Text('Team Members:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -64,10 +65,6 @@ class _AboutScreenState extends State<AboutScreen> {
                     child: ListTile(
                       leading: CircleAvatar(backgroundColor: AppColors.accentColor, child: Text(_teamMembers[index][0])),
                       title: Text(_teamMembers[index]),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete, color: AppColors.errorColor),
-                        onPressed: () => _removeMember(index),
-                      ),
                     ),
                   );
                 },

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../models/food_model.dart';
-import 'edit_item_screen.dart';
 
 // ==========================================
 // 3. UPDATED CATEGORY DETAIL SCREEN
@@ -28,8 +27,10 @@ class CategoryDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = themeColor.withOpacity(0.15);
-
+    final backgroundColor = Color.alphaBlend(
+        themeColor.withValues(alpha: 0.15),
+        Colors.white,
+    );
     return Scaffold(
       backgroundColor: backgroundColor,
       body: SafeArea(
@@ -64,7 +65,7 @@ class CategoryDetailScreen extends StatelessWidget {
                       child: Text(
                         categoryName,
                         style: TextStyle(
-                          color: customTextColor, // <--- USES YOUR MANUAL COLOR
+                          color: customTextColor, // Text matches the background color
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
                           letterSpacing: 0.5,
@@ -139,8 +140,8 @@ class CategoryDetailScreen extends StatelessWidget {
   }
 
   Widget _buildTableItemCard(BuildContext context, FoodModel item) {
-    final labelBg = themeColor.withOpacity(0.4);
-    final valueBg = themeColor.withOpacity(0.15);
+    final labelBg = themeColor.withValues(alpha:0.4);
+    final valueBg = themeColor.withValues(alpha:0.15);
     final borderColor = themeColor;
     
     final formattedDate = "${item.expirationDate.day}/${item.expirationDate.month}/${item.expirationDate.year}";

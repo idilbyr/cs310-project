@@ -42,7 +42,6 @@ class _AddItemScreenState extends State<AddItemScreen> {
   @override
   Widget build(BuildContext context) {
     final fridgeProvider = Provider.of<FridgeProvider>(context);
-    final effectiveFridgeId = widget.fridgeId ?? fridgeProvider.selectedFridge?.id;
     final fridgeName = fridgeProvider.selectedFridge?.name ?? "My Fridge";
 
     return Scaffold(

@@ -14,13 +14,12 @@ import 'screens/home_screen.dart';           // Screen 3
 import 'screens/fridge_overview_screen.dart'; // Screen 6
 // Eksik sayfalar için geçici sayfa
 // Renkler ve Tema
-import 'utils/constants.dart';
 // ALP
 import 'screens/add_item_screen.dart';
-import 'screens/edit_item_screen.dart';
 import 'screens/expiring_soon_screen.dart';
 import 'screens/add_edit_item_screen.dart';
 import 'screens/shopping_list.dart';
+import 'screens/user_settings_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -113,6 +112,7 @@ class MyApp extends StatelessWidget {
         ExpiringSoonScreen.routeName: (context) => const ExpiringSoonScreen(),
         AddEditHomeScreen.routeName: (context) => const AddEditHomeScreen(),
         ShoppingListScreen.routeName: (context) => const ShoppingListScreen(),
+        UserSettingsScreen.routeName: (context) => const UserSettingsScreen(),
       },
     );
   }
