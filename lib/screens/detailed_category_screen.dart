@@ -4,7 +4,7 @@ import '../models/food_model.dart';
 // ==========================================
 // 3. UPDATED CATEGORY DETAIL SCREEN
 // ==========================================
-class CategoryDetailScreen extends StatelessWidget {
+class CategoryDetailScreen extends StatefulWidget {
   static const routeName = '/detailed_category_screen';
   final String categoryName;
   final Color themeColor;
@@ -26,9 +26,45 @@ class CategoryDetailScreen extends StatelessWidget {
   });
 
   @override
+  State<CategoryDetailScreen> createState() => _CategoryDetailScreenState();
+}
+
+class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
+  List<FoodModel> _filteredItems = [];
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredItems = widget.items;
+  }
+
+  void _runFilter(String enteredKeyword) {
+    List<FoodModel> results = [];
+    if (enteredKeyword.isEmpty) {
+      results = widget.items;
+    } else {
+      results = widget.items
+          .where((item) =>
+              item.name.toLowerCase().contains(enteredKeyword.toLowerCase())) // case insensitive searching
+          .toList();
+    }
+
+    setState(() {
+      _filteredItems = results; // show related item
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final backgroundColor = Color.alphaBlend(
-        themeColor.withValues(alpha: 0.15),
+        widget.themeColor.withValues(alpha: 0.15),
         Colors.white,
     );
     return Scaffold(
@@ -54,18 +90,18 @@ class CategoryDetailScreen extends StatelessWidget {
                     child: Container(
                       height: 50,
                       decoration: BoxDecoration(
-                        color: themeColor,
+                        color: widget.themeColor,
                         borderRadius: BorderRadius.circular(15),
                         border: Border.all(
-                            color: customTextColor, // Border matches the text color you chose
+                            color: widget.customTextColor, // Border matches the text color you chose
                             width: 2.0
                         ),
                       ),
                       alignment: Alignment.center,
                       child: Text(
-                        categoryName,
+                        widget.categoryName,
                         style: TextStyle(
-                          color: customTextColor, // Text matches the background color
+                          color: widget.customTextColor, // Text matches the background color
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
                           letterSpacing: 0.5,
@@ -82,19 +118,19 @@ class CategoryDetailScreen extends StatelessWidget {
                     width: 50,
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: themeColor,
+                      color: widget.themeColor,
                       borderRadius: BorderRadius.circular(15),
                       border:Border.all(
-                          color: customTextColor,
+                          color: widget.customTextColor,
                           width: 2.0
                       ),
                     ),
 
                     child: Image.asset(
-                      iconPath,
-                      color: customIconColor, // <--- USES YOUR MANUAL COLOR
+                      widget.iconPath,
+                      color: widget.customIconColor, // our new custom icon color
                       fit: BoxFit.contain,
-                      errorBuilder: (ctx, err, stack) => Icon(Icons.image, color: customTextColor),
+                      errorBuilder: (ctx, err, stack) => Icon(Icons.image, color: widget.customTextColor), // Fallback icon
                     ),
                   ),
                 ],
@@ -111,13 +147,15 @@ class CategoryDetailScreen extends StatelessWidget {
                   border: Border.all(color: Colors.grey, width: 1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const TextField(
-                  decoration: InputDecoration(
+                child: TextField(
+                  controller: _searchController,
+                  onChanged: (value) => _runFilter(value),
+                  decoration: const InputDecoration(
                     hintText: "Search",
                     hintStyle: TextStyle(color: Colors.black54, fontSize: 16),
                     prefixIcon: Icon(Icons.search, size: 24, color: Colors.grey),
                     border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(vertical: 13),
+                    contentPadding: EdgeInsets.symmetric(vertical: 13), // fully working search bar
                   ),
                 ),
               ),
@@ -127,9 +165,9 @@ class CategoryDetailScreen extends StatelessWidget {
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.all(16),
-                itemCount: items.length,
+                itemCount: _filteredItems.length,
                 itemBuilder: (context, index) {
-                  return _buildTableItemCard(context, items[index]);
+                  return _buildTableItemCard(context, _filteredItems[index]);
                 },
               ),
             ),
@@ -140,9 +178,9 @@ class CategoryDetailScreen extends StatelessWidget {
   }
 
   Widget _buildTableItemCard(BuildContext context, FoodModel item) {
-    final labelBg = themeColor.withValues(alpha:0.4);
-    final valueBg = themeColor.withValues(alpha:0.15);
-    final borderColor = themeColor;
+    final labelBg = widget.themeColor.withValues(alpha:0.4);
+    final valueBg = widget.themeColor.withValues(alpha:0.15);
+    final borderColor = widget.themeColor;
     
     final formattedDate = "${item.expirationDate.day}/${item.expirationDate.month}/${item.expirationDate.year}";
 
