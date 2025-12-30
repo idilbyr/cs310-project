@@ -9,6 +9,7 @@ import 'providers/fridge_provider.dart';
 import 'screens/about_screen.dart';
 import 'screens/create_fridge_screen.dart';
 import 'screens/login_page.dart';
+import 'screens/auth_wrapper.dart';
 // Berkan
 import 'screens/home_screen.dart';           // Screen 3
 import 'screens/fridge_overview_screen.dart'; // Screen 6
@@ -98,7 +99,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      initialRoute: LoginPage.routeName,
+      home: const AuthWrapper(),
       routes: {
         LoginPage.routeName: (context) => const LoginPage(),
         // Screen 3: Ana Sayfa

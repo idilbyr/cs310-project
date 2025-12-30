@@ -4,13 +4,16 @@ import 'package:flutter/material.dart';
 class AuthProvider with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   User? _user;
+  bool _isAuthLoading = true;
   
   User? get user => _user;
   bool get isAuthenticated => _user != null;
+  bool get isAuthLoading => _isAuthLoading;
 
   AuthProvider() {
     _auth.authStateChanges().listen((User? user) {
       _user = user;
+      _isAuthLoading = false;
       notifyListeners();
     });
   }
