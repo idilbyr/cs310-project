@@ -38,10 +38,10 @@ class _LoginPageState extends State<LoginPage> {
         _passwordController.text,
       );
 
+      if (!mounted) return;
       setState(() => _isLoading = false);
 
       if (error == null) {
-        if (!mounted) return;
         Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName, (route) => false);
       } else {
         if (!mounted) return;
