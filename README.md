@@ -33,6 +33,13 @@ This shareholding raises a certain problem: How do we track this mindless shoppi
 *   **Search Functionality:** Ability to search for specific items within fridge categories.
 *   **Theme Toggle:** Users can switch between light and dark mode in the "About" page.
 
+## Known Limitations and Challenges
+
+- **Sharelink:** The functionality to generate an automated invite link is currently not implemented.
+- **UI Categories:** Only five main categories are currently available; more will be added in future updates.
+- **Git Conflicts:** The team faced challenges with branch merging, which were resolved by implementing a centralized merge process led by Idil Bayar.
+- **Account Customization:** Avatar and username editing are currently in the placeholder stage.
+
 ## Technical Details
 
 ### Firebase Integration
@@ -77,10 +84,3 @@ The project uses an asynchronous data-binding approach. The UI is connected to F
 To execute the automated unit tests for the application, use the following command:
 ```bash
 flutter test
-
-## Known Limitations and Challenges
-
-- **Sharelink:** The functionality to generate an automated invite link is currently not implemented.
-- **UI Categories:** Only five main categories are currently available; more will be added in future updates.
-- **Git Conflicts:** The team faced challenges with branch merging, which were resolved by implementing a centralized merge process led by Idil Bayar.
-- **Account Customization:** Avatar and username editing are currently in the placeholder stage.
